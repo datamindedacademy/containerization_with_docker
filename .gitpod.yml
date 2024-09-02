@@ -1,8 +1,11 @@
 image:
   file: .gitpod.Dockerfile
-checkoutLocation: '.'
+checkoutLocation: "."
+workspaceLocation: "content"
 tasks:
-  - name: Clean root and grab useful exercises.
-    before: |
-      rm -rfv ./{*,.*}
-      sudo mv /home/gitpod/docker-exercises/* .
+  - name: Remove solutions
+    command: |
+      rm -rfv solutions/
+ports:
+  - port: 0-9999
+    onOpen: notify
