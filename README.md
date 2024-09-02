@@ -11,7 +11,7 @@ The following exercises are part of the repository:
 
 * **Exercise 1** (`exercise_1`) - Basics of the Docker CLI
 * **Exercise 2** (`exercise_2`) - Interact with running containers (entrypoint overwrite, exec, bind mounts)
-* **Exercise 3** (`exercise_3`) - Use existing Docker images (YoutubeDL)
+* **Exercise 3** (`exercise_3`) - Use existing Docker images (nginx)
 * **Exercise 4** (`exercise_4`) - Write the Dockerfile of a simple Python application (Streamlit)
 * **Exercise 5** (`exercise_5`) - Write the Dockerfile of a simple Spring (Java) application
 * **Exercise 6** (`exercise_6`) - Run a frontend-backend stack
@@ -28,12 +28,12 @@ This exercise workshop can be run directly on Gitpod (without any need to provis
 
 * All the exercises solutions are in `content/solutions` and are hidden in the Lab environment at the following paths:
 
-|            | Path in Docker image |
-|------------|---------------|
+|            | Path in Docker image   |
+| ---------- | ---------------------- |
 | Exercise 1 | `No solution required` |
-| Exercise 2 | `/bin/dataminded` |
-| Exercise 3 | `/bin/acme` |
-| Exercise 4 | `/bin/blizzard` |
-| Exercise 5 | `/bin/piper`|
-| Exercise 6 | `/bin/abstergo` |
-| Exercise 7 | `/bin/glados` |
+| Exercise 2 | `/bin/dataminded`      |
+| Exercise 3 | `/bin/acme`            |
+| Exercise 4 | `/bin/blizzard`        |
+| Exercise 5 | `/bin/piper`           |
+| Exercise 6 | `/bin/abstergo`        |
+| Exercise 7 | `/bin/glados`          |
