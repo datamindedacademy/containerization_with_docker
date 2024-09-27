@@ -6,7 +6,7 @@ in an interactive environment. See it running live by clicking the badge below:
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/ammaryh92/activation_functions/main/app.py)
 
 Note that installing Streamlit and running an application designed for the framework requires to have 
-Python 3.7 in the system. By default, Streamlit runs on port `8501`.
+Python 3.8 in the system. By default, Streamlit runs on port `8501`.
 
 ## Run this demo locally
 
