@@ -19,10 +19,4 @@ them in different terminals. Make sure everything works as expected when you run
 
 A few notes to consider:
 
-* `localhost` isn't accessible in the Gitpod environments. Instead, you will need to use the `gp` 
-(for `gitpod`) CLI tool that will prompt you what is your current GitPod sandbox URL for a given port. 
-For example, you can get the URL to your sandbox for port 8080 by running `gp url 8080`. That will 
-return you something like `https://8080-amaranth-perch-k21ygfry.ws-eu25.gitpod.io`. You will need to 
-use that address instead of `localhost:8080` in your Docker environment variables.
-
-* Make sure you made the Gitpod DNS URL public by releasing the small lock linked to it in the dedicated side panel.
+* `localhost` isn't accessible in the GitHub Codespaces environments. Instead, GitHub Codespaces creates URLs for each service you run. You can find the URLs in the `ports` tab of the VSCode terminal. By default these URLs are private, but you can choose to make them public. 

@@ -28,7 +28,7 @@ Sounds exciting no? Let's get started 🛠 !
 
 1. Go to your GitHub account and create a new repository.
 
-2. Create an SSH key in your Gitpod environment with `ssh-keygen` and link it with your GitHub account.
+2. Create an SSH key in your GitHub Codespaces environment with `ssh-keygen` and link it with your GitHub account.
 
 3. Push the content of the `project-api` folder to the newly created repository. You can do it following 
 one of these two ways. Make sure you use the SSH cloning URL from Github:
