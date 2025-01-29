@@ -1,0 +1,21 @@
+{
+  "name": "containerization_with_docker",
+  "build": {
+    "dockerfile": "../Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "remoteUser": "vscode",
+  "containerUser": "vscode",
+  "postCreateCommand": "rm -rfv solutions/",
+  "workspaceFolder": "/workspace/containerization_with_docker/content",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/containerization_with_docker,type=bind",
+  "portsAttributes": {
+    "0-9999": {
+      "label": "Port 0-9999",
+      "onAutoForward": "notify",
+      "elevateIfNeeded": true
+    }
+  }
+}
