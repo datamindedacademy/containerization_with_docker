@@ -3,7 +3,7 @@
 
 Let's use the [`nginx Docker image`](https://hub.docker.com/_/nginx) in practice to run a simple web server.
 
-1. Run a container based on `nginx:1.25.5`. Search in the documentation which port the container exposes and map it to a local port. **Note:** When working in GitHub Codespaces, ports are opened on the GitHub container rather than on localhost on your own computer. You can find the open ports the `ports` tab of the VSCode terminal.
+1. Run a container based on `nginx:1.25.5`. Search in the documentation which port the container exposes and map it to a local port. **Note:** When working in GitHub Codespaces, ports are opened on the GitHub container rather than on localhost on your own computer. You can find the open ports the `ports` tab of the VSCode terminal. Male sure that you mount the html page inside the content directory to the container. You need to search as well in the documentation, where can you mount the html code to the container.
 
 2. Check that you can access your web server.
 
