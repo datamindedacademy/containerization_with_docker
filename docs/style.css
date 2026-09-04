@@ -1,0 +1,217 @@
+/* Slidev 0.50 parks the "go to slide" dialog off-screen (`-top-20`) when it is closed,
+   but its autocomplete list keeps rendering and hangs down over the slide as a list of
+   every slide title. Hide the list while the dialog is parked; pressing "g" still works. */
+#slidev-goto-dialog[class*="-top-20"] .autocomplete-list {
+  display: none;
+}
+
+/* Nine agenda rows have to fit on one page; the theme's default row height fits five. */
+.dm-agenda-body ol > li {
+  padding: 4px 4px !important;
+  font-size: 15px !important;
+}
+.dm-agenda-body h1:first-child {
+  padding-bottom: 8px !important;
+  margin-bottom: 16px !important;
+}
+
+/* The recap list: UnoCSS's reset strips list markers, so put the numbers back. */
+.dm-recap ol { list-style: decimal; padding-left: 26px; font-size: 18px; }
+.dm-recap li { margin-bottom: 10px; padding-left: 4px; }
+.dm-recap ul { list-style: disc; padding-left: 22px; margin-top: 6px; }
+.dm-recap ul li { margin-bottom: 4px; font-size: 17px; }
+
+/* Simple hairline-bordered comparison table, used for CLI and instruction references. */
+.dm-table { width: 100%; border-collapse: collapse; font-size: 15px; margin-top: 16px; }
+.dm-table th, .dm-table td {
+  border-bottom: 1px solid rgba(84, 62, 220, 0.35);
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+.dm-table th { color: var(--dm-connecting); font-weight: 700; }
+.dm-table td code { font-size: 14px; }
+
+/* Reference tables that run long (the CLI cheatsheets) need tighter rows to clear the footer. */
+.dm-table--dense td { padding: 4px 10px; font-size: 13px; }
+.dm-table--dense th { padding: 4px 10px; font-size: 13px; }
+.dm-table--dense td code { font-size: 12.5px; }
+
+/* Exercise-pointer badge used inside statement layout to show the folder path. */
+.exercise-path {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  font-family: ui-monospace, monospace;
+  font-size: 16px;
+}
+
+/* Exercise slides: one or two exercises side by side on a single statement slide, so a block of
+   back-to-back exercises doesn't become a run of near-identical slides. */
+.ex-grid {
+  display: flex;
+  gap: 28px;
+  justify-content: center;
+  align-items: stretch;
+  margin-top: 28px;
+  text-align: left;
+}
+.ex-grid--single { justify-content: center; }
+.ex-grid--single .ex-item { max-width: 620px; text-align: center; }
+.ex-item {
+  flex: 1 1 0;
+  max-width: 420px;
+  padding: 20px 22px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  display: flex;
+  flex-direction: column;
+}
+.ex-name {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.ex-desc {
+  font-size: 15px;
+  line-height: 1.45;
+  opacity: 0.9;
+  flex: 1;
+}
+.ex-item .exercise-path { align-self: flex-start; font-size: 14px; }
+.ex-grid--single .ex-item .exercise-path { align-self: center; }
+
+/* DmColumns defaults to equal-width columns (flex: 1 1 0); these classes give a 2:1 ratio
+   for slides that need an uneven split, e.g. bullets next to a narrower code sample. */
+.col-w2 { flex: 2 1 0 !important; }
+.col-w1 { flex: 1 1 0 !important; }
+
+/* Shrinks headers, code blocks and bullets so a full side-by-side code comparison fits
+   on one slide (docker exec vs. docker run --entrypoint, single- vs. multi-stage builds). */
+.code-compare .dm-col-head { font-size: 13px !important; padding: 5px 10px !important; margin-bottom: 8px !important; }
+.code-compare .dm-col-body { font-size: 12px !important; }
+.code-compare pre.shiki { padding: 8px 12px !important; font-size: 11px !important; line-height: 1.3 !important; margin: 0 !important; }
+
+/* Image layer stack: the Dockerfile-instruction/layer-hash visual from the original deck.
+   Layers are listed bottom-up (FROM at the bottom), so the list is column-reverse. */
+.layer-stack {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 4px;
+  width: 210px;
+}
+.layer {
+  border-radius: 6px;
+  padding: 7px 12px;
+  background: var(--dm-surface);
+  border: 1px solid rgba(84, 62, 220, 0.3);
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  transition: background 200ms, border-color 200ms;
+}
+.layer-hash { font-size: 11px; opacity: 0.55; }
+/* A layer that has to be rebuilt because something below it changed. */
+.layer--dirty {
+  background: rgba(252, 107, 81, 0.16);
+  border-color: var(--dm-magenta, #fc6b51);
+}
+/* The layer whose input actually changed. */
+.layer--changed {
+  background: var(--dm-connecting, #543edc);
+  border-color: var(--dm-connecting, #543edc);
+  color: #fff;
+}
+.layer--changed .layer-hash { opacity: 0.8; }
+/* Layers still served from cache. */
+.layer--cached { opacity: 0.55; }
+
+/* The host/container runtime diagram behind -p, -v and -e. */
+.host-box {
+  border: 1px dashed rgba(8, 6, 53, 0.4);
+  border-radius: 10px;
+  padding: 14px 16px 16px;
+  background: rgba(84, 62, 220, 0.04);
+}
+.host-label, .container-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 8px;
+}
+.container-box {
+  border: 1px solid var(--dm-connecting, #543edc);
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: #fff;
+}
+.port-pill, .mount-pill, .env-pill {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 13px;
+  background: var(--dm-surface);
+  border: 1px solid rgba(84, 62, 220, 0.3);
+}
+.port-pill { background: rgba(84, 62, 220, 0.12); }
+.mount-pill { background: rgba(252, 107, 81, 0.14); }
+.env-pill { background: rgba(8, 6, 53, 0.08); }
+
+/* Cheatsheet slides: a dense two-column command reference. */
+.cheat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 22px;
+  margin-top: 10px;
+}
+.cheat-item { font-size: 12.5px; line-height: 1.35; }
+.cheat-item b { color: var(--dm-connecting); font-weight: 700; }
+.cheat-item code {
+  display: block;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* Orchestration ladder: compose / swarm / kubernetes, growing in feature richness. */
+.ladder { display: flex; align-items: flex-end; gap: 18px; margin-top: 18px; }
+.ladder-step {
+  flex: 1 1 0;
+  border-radius: 10px 10px 0 0;
+  padding: 14px 16px;
+  background: var(--dm-surface);
+  border: 1px solid rgba(84, 62, 220, 0.3);
+  border-bottom: none;
+}
+.ladder-step h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+.ladder-step p { font-size: 13px; line-height: 1.4; opacity: 0.85; }
+.ladder-step--1 { height: 130px; }
+.ladder-step--2 { height: 170px; }
+.ladder-step--3 { height: 210px; background: rgba(84, 62, 220, 0.12); }
+.ladder-axis { font-size: 12px; opacity: 0.7; margin-top: 8px; text-align: right; }
+
+/* Long YAML samples (compose file, GitHub Actions workflow) run past the 552px slide height at
+   the default code size; these shrink them to fit in one page of the PDF export. */
+.tight-code pre.shiki {
+  font-size: 11px !important;
+  line-height: 1.35 !important;
+  padding: 10px 14px !important;
+}
+
+/* The -p / -v / -e slides put a full `docker run` line in a half-width column; at the default
+   size it is clipped, so the code in those columns is a size smaller. */
+.run-flags pre.shiki {
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+  padding: 8px 12px !important;
+}

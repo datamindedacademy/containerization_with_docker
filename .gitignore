@@ -1,0 +1,4 @@
+node_modules/
+docs/dist/
+docs/Containerization-with-Docker.pdf
+.idea
