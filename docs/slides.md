@@ -368,6 +368,10 @@ docker ps -a
 </DmColumn>
 </DmColumns>
 
+<!--
+Animation: all → docker run → docker ps → all.
+-->
+
 ---
 layout: statement
 ---
@@ -406,6 +410,10 @@ docker container exec <container name or id> <command>
 <DmBanner tone="violet" icon="i-mdi-bug-outline" title="docker exec is your debugger" class="mt-6">
 Extremely useful to debug a running Docker container: open a shell inside the running container, look at the filesystem, the environment and the logs from the inside.
 </DmBanner>
+
+<!--
+Animation: all → stop/start → rm → logs → exec → all. Stay on exec for the debugger line.
+-->
 
 ---
 layout: default
@@ -664,6 +672,11 @@ docker image tag <source>:<tag> <target>:<target tag>
 # Delete an existing image
 docker image rm <image id / complete name>  # docker rmi
 ```
+
+<!--
+Animation: all → ls → build → tag → rm → all.
+-->
+
 ---
 layout: default
 label: 4 · Images & registries
@@ -741,6 +754,10 @@ docker tag my-app:latest \
   ghcr.io/datamindedacademy/my-app:1.2.0
 docker push ghcr.io/datamindedacademy/my-app:1.2.0
 ```
+
+<!--
+Animation: all → pull → push → all. The example below is static.
+-->
 
 ---
 layout: section
@@ -898,6 +915,10 @@ CMD ["python", "main.py"]
 
 <p class="mt-6 text-sm opacity-70"><code>ADD</code> does the same as COPY. It just works also for remote files. </p>
 
+<!--
+Animation: FROM → WORKDIR → COPY → RUN → CMD → all. ADD is the quiet extra, same as COPY plus remote URLs.
+-->
+
 ---
 layout: default
 label: 5 · Writing Dockerfiles
@@ -905,31 +926,103 @@ label: 5 · Writing Dockerfiles
 
 # Every instruction is a <span class="dm-accent">layer</span>
 
+<div class="layer-cake">
+  <span v-click="1" class="layer-cake-change">Changes here</span>
+  <div v-click="2" class="layer-cake-rebuild"></div>
+  <span v-click="2" class="layer-cake-rebuild-tip">Rebuild all these</span>
+
+  <div class="layer-iso">FROM</div>
+  <p class="layer-cake-def"><b>FROM</b> — specify a base image</p>
+
+  <div class="layer-iso">WORKDIR</div>
+  <p class="layer-cake-def"><b>WORKDIR</b> — running <code>cd</code> in the Docker world</p>
+
+  <div class="layer-iso" :class="{ 'layer-iso--focus': $clicks >= 1 }">COPY</div>
+  <p class="layer-cake-def"><b>COPY / ADD</b> — copy files inside the container</p>
+
+  <div class="layer-iso">RUN</div>
+  <p class="layer-cake-def"><b>RUN</b> — run a command while building the image</p>
+
+  <div class="layer-iso">CMD</div>
+  <p class="layer-cake-def"><b>CMD</b> — the command run when the container runs</p>
+</div>
+
+<!--
+Animation: stack only → Changes here on COPY → Rebuild all these down to CMD.
+Read it like a Dockerfile: FROM on top. Change COPY, and every instruction below it is rebuilt.
+-->
+
+---
+layout: default
+label: 5 · Writing Dockerfiles
+---
+
+# What might be <span class="dm-accent">wrong</span>?
+
 <DmColumns class="mt-4" :gap="24">
 <DmColumn tone="plain" class="col-w1">
 
-<div class="layer-stack">
-<div class="layer"><span>FROM</span><span class="layer-hash">ytr5e8..</span></div>
-<div class="layer"><span>WORKDIR</span><span class="layer-hash">p9isqe..</span></div>
-<div class="layer layer--changed"><span>COPY</span><span class="layer-hash">iH9uyt..</span></div>
-<div class="layer layer--dirty"><span>RUN</span><span class="layer-hash">2b8ege..</span></div>
-<div class="layer layer--dirty"><span>CMD</span><span class="layer-hash">0a1chj..</span></div>
+<div v-click.hide="3" class="layer-stack layer-stack--alpine">
+<div class="layer"><span>FROM alpine:3.4</span></div>
+<div class="layer" :class="{ 'layer--changed': $clicks >= 1 }"><span>COPY app.py /src/app</span></div>
+<div class="layer" :class="{ 'layer--dirty': $clicks >= 1 }"><span>RUN apk update</span></div>
+<div class="layer" :class="{ 'layer--dirty': $clicks >= 1 }"><span>RUN apk add curl</span></div>
+<div class="layer" :class="{ 'layer--dirty': $clicks >= 1 }"><span>RUN apk add vim</span></div>
+<div class="layer" :class="{ 'layer--dirty': $clicks >= 1 }"><span>RUN apk add git</span></div>
+</div>
+
+<div v-click="3" class="layer-stack layer-stack--alpine">
+<div class="layer"><span>FROM alpine:3.4</span></div>
+<div class="layer layer--merged"><span>RUN apk update && apk add …</span></div>
+<div class="layer"><span>COPY app.py /src/app</span></div>
 </div>
 
 </DmColumn>
 <DmColumn tone="plain" divider class="col-w1">
 
-Each instruction produces a layer with its own hash. A layer is **cached** as long as the layer
-below it and its own input are unchanged.
+<div v-click.hide="3">
 
-Change something in the `COPY` step, and every layer above it is invalidated and **rebuilt**.
+```dockerfile {all|2|3-6}
+FROM alpine:3.4
+COPY app.py /src/app
+RUN apk update
+RUN apk add curl
+RUN apk add vim
+RUN apk add git
+```
 
-<DmBanner tone="authentic" icon="i-mdi-layers-outline" title="Think wisely about the way you design your layers" class="mt-4">
-Order instructions from least to most frequently changing.
-</DmBanner>
+</div>
+
+<div v-click="3">
+
+```dockerfile
+FROM alpine:3.4
+RUN apk update && \
+    apk add curl vim git
+COPY app.py /src/app
+```
+
+</div>
+
+<div v-click.hide="3">
+<p v-click="1" class="layer-note">
+<b>COPY</b> sits too early. Edit <code>app.py</code> and every <code>RUN</code> above it is rebuilt.
+</p>
+<p v-click="2" class="layer-note">
+Four <code>RUN</code> layers for packages that could be <b>one</b> layer.
+</p>
+</div>
+<p v-click="3" class="layer-note">
+Packages in one cached layer. <code>COPY</code> last, so editing the app does not reinstall them.
+</p>
 
 </DmColumn>
 </DmColumns>
+
+<!--
+Animation: ask first → COPY too early → four RUN layers → merged RUN and COPY last.
+Two answers: COPY before the packages busts the cache, and four RUN layers where one would do.
+-->
 
 ---
 layout: default
@@ -939,32 +1032,31 @@ label: 5 · Writing Dockerfiles
 # Better usage of the <span class="dm-accent">cache</span>
 
 <DmColumns class="mt-4 code-compare">
-<DmColumn header="Slow: code and deps in one step" tone="navy">
+<DmColumn header="Slow: COPY first, one RUN per package" tone="navy">
 
 ```dockerfile
-FROM python:3.12-slim
-WORKDIR /app
-COPY . .
-RUN pip install -r requirements.txt
-CMD ["python", "main.py"]
+FROM alpine:3.4
+COPY app.py /src/app
+RUN apk update
+RUN apk add curl
+RUN apk add vim
+RUN apk add git
 ```
 
-Any change in the code copied in the `COPY` step leads to **re-installing everything** from the
+Any change in the code copied in the `COPY` step will lead to **re-installing everything** from the
 `RUN` steps.
 
 </DmColumn>
-<DmColumn header="Fast: dependencies first" tone="violet" divider>
+<DmColumn header="Better usage of the cache and layers" tone="violet" divider>
 
 ```dockerfile
-FROM python:3.12-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
-CMD ["python", "main.py"]
+FROM alpine:3.4
+RUN apk update && \
+    apk add curl vim git
+COPY app.py /src/app
 ```
 
-Requirements change rarely, so the expensive `RUN` layer stays cached across code edits.
+Packages land in one cached layer. `COPY` comes last, so editing `app.py` does not rebuild them.
 
 </DmColumn>
 </DmColumns>
@@ -973,43 +1065,87 @@ Requirements change rarely, so the expensive `RUN` layer stays cached across cod
 Check the output of docker build: it prints CACHED in front of every reused layer.
 -->
 ---
+layout: section
+---
+
+# Dockerfile <span class="dm-accent">example</span>
+
+---
 layout: default
 label: 5 · Writing Dockerfiles
 ---
 
-# Three more instructions worth <span class="dm-accent">knowing</span>
+# A first <span class="dm-accent">Dockerfile</span>
 
-<DmColumns class="mt-4" :gap="20">
-<DmColumn tone="plain" class="col-w1">
+<div class="df-full-code">
+
+```dockerfile
+FROM ubuntu:18.04
+
+RUN useradd -ms /bin/bash python-api
+
+RUN apt update && \
+    apt install software-properties-common --yes && \
+    add-apt-repository ppa:deadsnakes/ppa --yes && \
+    apt install python3-pip --yes
+
+USER python-api
+WORKDIR /repo
+COPY . /repo
+RUN python3 -m pip install -r requirements.txt
+
+EXPOSE 8080
+ENTRYPOINT ["python3"]
+CMD ["main.py"]
+```
+
+</div>
+
+<p class="layer-ask">What do you think?</p>
+
+<!--
+Ask first. Heavy base, we install Python ourselves, and COPY . before pip so every
+code change reinstalls the requirements.
+-->
+
+---
+layout: default
+label: 5 · Writing Dockerfiles
+---
+
+# A smaller image, a better <span class="dm-accent">cache</span>
+
+<div class="df-size-row">
+  <span class="df-size df-size--big">ubuntu · 495MB</span>
+  <span class="df-size-arrow">→</span>
+  <span class="df-size df-size--small">python:3.12-slim · 235MB</span>
+</div>
+
+<div class="df-full-code">
 
 ```dockerfile
 FROM python:3.12-slim
-WORKDIR /app
+
+WORKDIR /repo
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 EXPOSE 8080
-USER appuser
 ENTRYPOINT ["python"]
 CMD ["main.py"]
 ```
 
-</DmColumn>
-<DmColumn tone="plain" divider class="col-w1">
+</div>
 
-- **USER** — change the terminal to an existing user.
-- **EXPOSE** — declare which port is used by the container.
-- **ENTRYPOINT** — defines the executable that runs the `CMD` command.
-
-</DmColumn>
-</DmColumns>
-
-<p class="mt-4 text-sm opacity-70"><code>ENTRYPOINT</code> is the program, <code>CMD</code> its default arguments. <code>docker run img foo.py</code> replaces the arguments, not the program.</p>
+<p class="layer-note mt-3">
+Small Python base, so we do not install the language. Requirements first, project files after:
+edit the app, and <code>pip install</code> stays cached.
+</p>
 
 <!--
-When using docker, the user is root by default, dont do that.
-Expose, mainly docs
+Same three files. Slim already has Python. COPY requirements.txt then pip, then COPY the
+project. That is the inverse of the previous slide, and about half the image.
 -->
 
 ---
@@ -1023,11 +1159,11 @@ label: 5 · Writing Dockerfiles
 <DmColumn tone="plain" class="col-w1">
 
 <div class="layer-stack">
-<div class="layer"><span>FROM</span><span class="layer-hash">ytr5e8..</span></div>
-<div class="layer"><span>WORKDIR</span><span class="layer-hash">p9isqe..</span></div>
-<div class="layer"><span>COPY</span><span class="layer-hash">iH9uyt..</span></div>
-<div class="layer"><span>RUN</span><span class="layer-hash">2b8ege..</span></div>
-<div class="layer"><span>CMD</span><span class="layer-hash">0a1chj..</span></div>
+<div class="layer"><span>FROM</span></div>
+<div class="layer"><span>WORKDIR</span></div>
+<div class="layer"><span>COPY</span></div>
+<div class="layer"><span>RUN</span></div>
+<div class="layer"><span>CMD</span></div>
 </div>
 
 </DmColumn>
@@ -1100,9 +1236,7 @@ docker build --build-arg="PYTHON_VERSION=3.11" .
 
 **When to use**: when you want to create different versions of your container from one Dockerfile.
 
-<DmBanner tone="navy" icon="i-mdi-alert-outline" title="Do not use for secrets" class="mt-4">
-Build arguments can be retrieved back out of the image via <code>docker image history</code>.
-</DmBanner>
+<DmBanner tone="navy" icon="i-mdi-alert-outline" title="Do not use for secrets" class="mt-4"></DmBanner>
 
 </DmColumn>
 </DmColumns>
@@ -1137,8 +1271,6 @@ docker build \
 - The secret is written to a **file** that is mounted only while that step runs
 - It has to be mounted in **every step** that needs it
 - Nothing about it is stored in the resulting image
-
-<p class="mt-4 text-sm opacity-70">Adding <code>--progress=plain</code> generates more verbose build logs, useful to debug that the secret was really available at build time.</p>
 
 </DmColumn>
 </DmColumns>
@@ -1184,6 +1316,10 @@ Poetry — but Poetry itself should not be in the final image.
 </DmColumn>
 </DmColumns>
 
+<!--
+Build tools not needed during runtime
+-->
+
 ---
 layout: section
 ---
@@ -1195,37 +1331,122 @@ layout: default
 label: 7 · Web application
 ---
 
+<div class="app-arch-wrap">
+<div class="app-arch app-arch--lg">
+  <div class="app-arch-users">
+    <img src="/intro/webapp/users.png" alt="" />
+    <p>Users in a browser</p>
+  </div>
+  <div class="app-arch-brace" aria-hidden="true">{</div>
+  <div class="app-arch-stack">
+    <div class="app-arch-row">
+      <div class="app-arch-dbl"></div>
+      <div class="app-arch-svc">
+        <div class="app-arch-logos">
+          <img src="/intro/webapp/docker.png" alt="Docker" />
+          <img src="/intro/webapp/nodejs.png" alt="Node.js" />
+        </div>
+        <img class="app-arch-icon" src="/intro/webapp/frontend.png" alt="" />
+        <p>Frontend</p>
+      </div>
+    </div>
+    <div class="app-arch-row">
+      <div class="app-arch-dbl"></div>
+      <div class="app-arch-svc">
+        <div class="app-arch-logos">
+          <img src="/intro/webapp/docker.png" alt="Docker" />
+          <img src="/intro/webapp/go.svg" alt="Go" />
+        </div>
+        <img class="app-arch-icon" src="/intro/webapp/backend.png" alt="" />
+        <p>Backend</p>
+      </div>
+      <div class="app-arch-dbl"></div>
+      <div class="app-arch-svc">
+        <div class="app-arch-logos">
+          <img src="/intro/webapp/docker.png" alt="Docker" />
+          <img src="/intro/webapp/postgres.png" alt="PostgreSQL" />
+        </div>
+        <img class="app-arch-icon" src="/intro/webapp/database.png" alt="" />
+        <p>Database</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+---
+layout: default
+label: 7 · Web application
+---
+
 # One service = one <span class="dm-accent">container</span>
 
-```mermaid {scale: 0.72}
-flowchart LR
-    U[Users in a browser] --> F[Frontend]
-    F --> B[Backend]
-    B --> D[(Database)]
-```
+<div class="one-svc-reasons">
+  <div>
+    <img src="/intro/webapp/scale.png" alt="" />
+    <p>Scaling<br>&amp; efficiency</p>
+  </div>
+  <div>
+    <img src="/intro/webapp/reuse.png" alt="" />
+    <p>Re-usability<br>&amp; modularity</p>
+  </div>
+  <div>
+    <img src="/intro/webapp/isolate.png" alt="" />
+    <p>Isolation<br>&amp; security</p>
+  </div>
+  <div>
+    <img src="/intro/webapp/build.png" alt="" />
+    <p>Easier<br>to build</p>
+  </div>
+</div>
 
-<DmColumns class="mt-4" :gap="14">
-<DmColumn tone="plain">
+<div class="app-arch-wrap app-arch-wrap--compact">
+<div class="app-arch">
+  <div class="app-arch-users">
+    <img src="/intro/webapp/users.png" alt="" />
+    <p>Users in a browser</p>
+  </div>
+  <div class="app-arch-brace" aria-hidden="true">{</div>
+  <div class="app-arch-stack">
+    <div class="app-arch-row">
+      <div class="app-arch-dbl"></div>
+      <div class="app-arch-svc">
+        <div class="app-arch-logos">
+          <img src="/intro/webapp/docker.png" alt="Docker" />
+          <img src="/intro/webapp/nodejs.png" alt="Node.js" />
+        </div>
+        <img class="app-arch-icon" src="/intro/webapp/frontend.png" alt="" />
+        <p>Frontend</p>
+      </div>
+    </div>
+    <div class="app-arch-row">
+      <div class="app-arch-dbl"></div>
+      <div class="app-arch-svc">
+        <div class="app-arch-logos">
+          <img src="/intro/webapp/docker.png" alt="Docker" />
+          <img src="/intro/webapp/go.svg" alt="Go" />
+        </div>
+        <img class="app-arch-icon" src="/intro/webapp/backend.png" alt="" />
+        <p>Backend</p>
+      </div>
+      <div class="app-arch-dbl"></div>
+      <div class="app-arch-svc">
+        <div class="app-arch-logos">
+          <img src="/intro/webapp/docker.png" alt="Docker" />
+          <img src="/intro/webapp/postgres.png" alt="PostgreSQL" />
+        </div>
+        <img class="app-arch-icon" src="/intro/webapp/database.png" alt="" />
+        <p>Database</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
 
-**Scaling & efficiency** — scale the busy service only
-
-</DmColumn>
-<DmColumn tone="plain" divider>
-
-**Re-usability & modularity** — swap one part, keep the rest
-
-</DmColumn>
-<DmColumn tone="plain" divider>
-
-**Isolation & security** — a blast radius per service
-
-</DmColumn>
-<DmColumn tone="plain" divider>
-
-**Easier to build** — one small Dockerfile per service
-
-</DmColumn>
-</DmColumns>
+<!--
+Each box is its own container. Scale the busy one, swap one, contain a blast, write a small
+Dockerfile. The next slide is what it looks like to run that by hand.
+-->
 
 ---
 layout: default
@@ -1243,15 +1464,8 @@ docker run -d --name web  --network app-net -e API_URL=http://api:8000 -p 3000:3
 
 <DmBanner tone="authentic" icon="i-mdi-emoticon-confused-outline" title="This starts getting tedious…" class="mt-6">
 …even if we can run in detached mode. Four commands, in the right order, every time, on every
-machine — and nothing in the repository records them.
+machine, on every deployment.
 </DmBanner>
-
-<p class="mt-6 text-center text-lg">Can we handle that in a more elegant way?</p>
-
-<!--
-Worth naming here: containers on a user-defined network reach each other by container name. That is
-why the backend can use `db` as a hostname. Compose creates that network for you.
--->
 
 ---
 layout: section
@@ -1296,6 +1510,78 @@ layout: default
 label: 8 · Orchestration
 ---
 
+# Three runs, one <span class="dm-accent">file</span>
+
+<DmColumns class="compose-map" :gap="16">
+<DmColumn tone="plain" class="col-w1">
+
+```bash
+docker run -it \
+  -p 3000:3000 \
+  -e BACKEND_URL=http://localhost:8080 \
+  hello_frontend
+```
+
+```bash
+docker run \
+  -p 8080:8080 \
+  -e REQUEST_ORIGIN=http://localhost:3000 \
+  -e POSTGRES_HOST=host.docker.internal \
+  -e POSTGRES_USER=frontend_backend \
+  -e POSTGRES_PASSWORD=helloworld1234 \
+  hello_backend
+```
+
+```bash
+docker run \
+  -p 5432:5432 \
+  -e POSTGRES_USER=frontend_backend \
+  -e POSTGRES_PASSWORD=helloworld1234 \
+  postgres:13.2-alpine
+```
+
+</DmColumn>
+<DmColumn header="docker-compose.yaml" tone="violet" divider class="col-w1">
+
+```yaml
+services:
+  frontend:
+    image: hello_frontend:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - BACKEND_URL=http://localhost:8080
+  backend:
+    image: hello_backend:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - REQUEST_ORIGIN=http://localhost:3000
+      - POSTGRES_HOST=db
+      - POSTGRES_USER=frontend_backend
+      - POSTGRES_PASSWORD=helloworld1234
+  db:
+    image: postgres:13.2-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=frontend_backend
+      - POSTGRES_PASSWORD=helloworld1234
+```
+
+</DmColumn>
+</DmColumns>
+
+<!--
+Same three containers. Compose gives you the network: POSTGRES_HOST is db, the service
+name, not host.docker.internal. Point at that line.
+-->
+
+---
+layout: default
+label: 8 · Orchestration
+---
+
 # docker-compose.yaml, <span class="dm-accent">step by step</span>
 
 <div class="tight-code">
@@ -1331,9 +1617,8 @@ volumes:
 </div>
 
 <!--
-Click order: the services block, then the database (image + env + volume), the backend (build,
-depends_on, ports), the frontend, and finally back to `build:` — Compose can build an image from a
-Dockerfile as well as pull one.
+Animation: all → services → database → backend → frontend → volumes → all.
+Compose can build an image from a Dockerfile as well as pull one.
 -->
 
 ---
@@ -1356,14 +1641,13 @@ docker compose down -v    # stop and clean volumes
 </DmColumn>
 <DmColumn tone="plain" divider class="col-w1">
 
-- Services reach each other **by service name**: the backend connects to `database`, not to an IP
+- Services reach each other **by service name**: the backend connects to `database`slid.
 - `build:` builds from a Dockerfile, `image:` pulls from a registry
-- One file in the repository replaces a page of `docker run` commands
 
 </DmColumn>
 </DmColumns>
 
-<DmBanner tone="navy" icon="i-mdi-key-off-outline" title="Never hard-code a password in the YAML" class="mt-6">
+<DmBanner tone="navy" icon="i-mdi-alert-outline" title="Never hard-code a password in the YAML" class="mt-6">
 Use environment variables from the host system instead:
 <code>- POSTGRES_PASSWORD=${POSTGRES_PASSWORD}</code>, read from your shell or a
 <code>.env</code> file that is git-ignored.
@@ -1428,67 +1712,131 @@ label: 9 · CI/CD
 
 # The DevOps <span class="dm-accent">loop</span>
 
-```mermaid {scale: 0.7}
-flowchart LR
-    P[Plan] --> B[Build] --> T[Test] --> R[Release] --> M[Monitor] --> P
-```
+<div class="cicd-flow">
+  <div class="cicd-bracket cicd-bracket--ci">Continuous integration (CI)</div>
+  <div class="cicd-bracket cicd-bracket--cd">Continuous delivery (CD)</div>
+  <div class="cicd-org cicd-org--company">
+    <img src="/intro/devops/company.png" alt="" />
+    Company
+  </div>
+  <div class="cicd-step cicd-step--build">Build</div>
+  <div class="cicd-step cicd-step--test">Test</div>
+  <div class="cicd-step cicd-step--release">Release</div>
+  <div class="cicd-org cicd-org--customers">
+    <img src="/intro/devops/customers.png" alt="" />
+    Customers
+  </div>
+  <div class="cicd-step cicd-step--plan">Plan</div>
+  <div class="cicd-step cicd-step--monitor">Monitor</div>
+</div>
 
-<DmColumns class="mt-6" :gap="16">
-<DmColumn header="Continuous integration" tone="violet">
-
-Plan → **Build** → **Test**: every change is built and tested automatically, in the same image
-your developers use.
-
-</DmColumn>
-<DmColumn header="Continuous delivery" tone="navy" divider>
-
-**Release** → **Monitor**: the artifact that passed the tests is the artifact that ships. No
-rebuild, no drift.
-
-</DmColumn>
-</DmColumns>
-
-<p class="mt-6 text-center">Adapt to change: the CI job runs when a PR is updated, when a branch merges to main, on a tag, …</p>
+<img class="cicd-infinity" src="/intro/devops/infinity.png" alt="Dev and Ops infinity loop: plan, code, build, test, release, deploy, operate, monitor" />
 
 ---
 layout: default
 label: 9 · CI/CD
 ---
 
-# Docker in a CI <span class="dm-accent">pipeline</span>
+# The DevOps <span class="dm-accent">loop</span>
 
-<div class="tight-code">
+<div class="cicd-flow">
+  <div class="cicd-bracket cicd-bracket--ci">Continuous integration (CI)</div>
+  <div class="cicd-bracket cicd-bracket--cd cicd-dim">Continuous delivery (CD)</div>
+  <div class="cicd-org cicd-org--company">
+    <img src="/intro/devops/company.png" alt="" />
+    Company
+  </div>
+  <div class="cicd-step cicd-step--build">Build</div>
+  <div class="cicd-step cicd-step--test">Test</div>
+  <div class="cicd-step cicd-step--release cicd-dim">Release</div>
+  <div class="cicd-org cicd-org--customers cicd-dim">
+    <img src="/intro/devops/customers.png" alt="" />
+    Customers
+  </div>
+  <div class="cicd-step cicd-step--plan cicd-dim">Plan</div>
+  <div class="cicd-step cicd-step--monitor cicd-dim">Monitor</div>
+</div>
 
-```yaml {all|1-4|6-11|13-18|19-22|all}
-name: build-and-push
+<img class="cicd-infinity" src="/intro/devops/infinity.png" alt="Dev and Ops infinity loop" />
+
+<!--
+Today we stay on the Dev side: build and test the image on every change. Release is the next
+course. Same image the developers used, same image the tests used.
+-->
+
+---
+layout: default
+label: 9 · CI/CD
+---
+
+<img class="gha-logo" src="/intro/devops/actions-logo.png" alt="GitHub Actions" />
+
+<img class="gha-shot" src="/intro/devops/actions-run.jpg" alt="Successful Master CICD Pipeline: checkout, build the Docker image, test the Docker image, login and push" />
+
+<!--
+Walk the job: checkout, build the image, test that image, then login and push. That is exercise 7.
+-->
+
+---
+layout: default
+label: 9 · CI/CD
+---
+
+# Adapt when the job is <span class="dm-accent">run</span>
+
+<DmColumns class="gha-code mt-2" :gap="16">
+<DmColumn header="Master CICD Pipeline" tone="navy">
+
+```yaml {all|2-4|all}
+name: Master CICD Pipeline
 on:
   push:
     branches: [main]
-
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/build-push-action@v6
-        with:
-          push: true
-          tags: ghcr.io/${{ github.repository }}:${{ github.sha }}
+      - uses: actions/checkout@v2
+      - name: Build the Docker image
+        run: |
+          git_hash=$(git rev-parse --short HEAD)
+          docker build . -t ghcr.io/$USER/project-api:$git_hash
+      - name: Test the Docker image
+        run: |
+          docker run --entrypoint=/bin/bash \
+            ghcr.io/$USER/project-api:$git_hash \
+            ./script/test
+      - name: Login and push
+        run: |
+          docker login ghcr.io -u ${{ github.actor }} \
+            -p ${{ secrets.GITHUB_TOKEN }}
+          docker push ghcr.io/$USER/project-api:$git_hash
 ```
 
-</div>
+</DmColumn>
+<DmColumn header="./script/test" tone="violet" divider>
+
+```bash
+#!/bin/bash
+set -e
+cd "$(dirname "$0")/.."
+python -m pip install -r .ci/requirements.txt
+python -m pip install -r requirements.txt
+flake8 app/
+pytest
+```
+
+</DmColumn>
+</DmColumns>
+
+<p class="layer-note">
+<b>on:</b> change when the job runs, a PR update, a merge to main, a tag. Tests run <b>inside</b> the
+image you just built, not on the runner's Python.
+</p>
 
 <!--
-Tagging with the commit SHA is the habit worth stealing: every image points back at exactly one
-commit, so "what is running in production" always has an answer.
+Animation: all → the on: trigger → all.
+Adapt to change when the CI job is run. The test step is docker run of the image, then flake8 and pytest.
 -->
 
 ---
