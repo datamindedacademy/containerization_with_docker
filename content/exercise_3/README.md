@@ -1,15 +1,19 @@
 # Data Minded Academy - Containerization with Docker
 ## Exercise 3 - Interact with containers
 
-Now that we’ve warmed up it’s time to get inside a container while it’s running! In this exercise, 
-you will have to use the `docker` CLI to interact with running containers.
+Time to get inside a container while it is running.
 
-We will use the `devopsdockeruh/simple-web-service:ubuntu` Docker image. Once instantiated as a container,
-this image will outputs logs into a file `text.log`. Go inside the container and use `tail -f /usr/src/app/text.log` to 
-follow the logs. Every 10 seconds the clock will send you a “secret message”.
+We will use the `devopsdockeruh/simple-web-service:ubuntu` image. Once it is running, it writes
+logs to `/usr/src/app/text.log`. Every 10 seconds the clock sends a “secret message”.
 
-1. Run a container from the `devopsdockeruh/simple-web-service:ubuntu` image (in detached mode). Set an environment variable `MY_SECRET` to a value of your choice.
+1. Run a container from `devopsdockeruh/simple-web-service:ubuntu` in detached mode. Set an
+   environment variable `MY_SECRET` to a value of your choice.
 
-2. Go inside the running container (using the right method) and
-   *  read the value of the `MY_SECRET` environment variable
-   *  use `tail -f ./text.log` to follow the logs. Every 10 seconds the clock will send you a “secret message”. What is the secret message? 
+2. Go inside that **running** container and
+   * read the value of `MY_SECRET`
+   * follow the logs with `tail -f /usr/src/app/text.log`. What is the secret message?
+
+Then answer:
+
+* What does the `-it` flag do? If you used it, why did you need it?
+* Start a new container from the same image, but overwrite the entrypoint so you land in a shell. Try to `tail` the log again. What do you see?

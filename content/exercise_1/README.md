@@ -9,4 +9,11 @@ In this exercise, you will have to use the `docker` CLI to complete a few simple
     * `nginx:1.21.5`
     * `ubuntu:20.04`. Change the startup command such that the container runs `sleep 1000` on startup.
     * `grafana/grafana:latest`
-4. List the existing containers (running or stopped).
+4. List the existing containers (running or stopped). Look at `docker ps -a` and `docker images`.
+
+
+Any ideas about the answers?
+
+* What are those numbers next to the image names?
+* Why did `hello-world` stop by itself?
+* Two containers with the same image name?

@@ -1,0 +1,734 @@
+/* Slidev 0.50 parks the "go to slide" dialog off-screen (`-top-20`) when it is closed,
+   but its autocomplete list keeps rendering and hangs down over the slide as a list of
+   every slide title. Hide the list while the dialog is parked; pressing "g" still works. */
+#slidev-goto-dialog[class*="-top-20"] .autocomplete-list {
+  display: none;
+}
+
+/* Nine agenda rows have to fit on one page; the theme's default row height fits five. */
+.dm-agenda-body ol > li {
+  padding: 4px 4px !important;
+  font-size: 15px !important;
+}
+.dm-agenda-body h1:first-child {
+  padding-bottom: 8px !important;
+  margin-bottom: 16px !important;
+}
+
+/* The recap list: UnoCSS's reset strips list markers, so put the numbers back. */
+.dm-recap ol { list-style: decimal; padding-left: 26px; font-size: 18px; }
+.dm-recap li { margin-bottom: 10px; padding-left: 4px; }
+.dm-recap ul { list-style: disc; padding-left: 22px; margin-top: 6px; }
+.dm-recap ul li { margin-bottom: 4px; font-size: 17px; }
+
+/* Simple hairline-bordered comparison table, used for CLI and instruction references. */
+.dm-table { width: 100%; border-collapse: collapse; font-size: 15px; margin-top: 16px; }
+.dm-table th, .dm-table td {
+  border-bottom: 1px solid rgba(84, 62, 220, 0.35);
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+.dm-table th { color: var(--dm-connecting); font-weight: 700; }
+.dm-table td code { font-size: 14px; }
+
+/* Reference tables that run long (the CLI cheatsheets) need tighter rows to clear the footer. */
+.dm-table--dense td { padding: 4px 10px; font-size: 13px; }
+.dm-table--dense th { padding: 4px 10px; font-size: 13px; }
+.dm-table--dense td code { font-size: 12.5px; }
+
+/* Exercise-pointer badge used inside statement layout to show the folder path. */
+.exercise-path {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  font-family: ui-monospace, monospace;
+  font-size: 16px;
+}
+
+/* Exercise slides: one or two exercises side by side on a single statement slide, so a block of
+   back-to-back exercises doesn't become a run of near-identical slides. */
+.ex-grid {
+  display: flex;
+  gap: 28px;
+  justify-content: center;
+  align-items: stretch;
+  margin-top: 28px;
+  text-align: left;
+}
+.ex-grid--single { justify-content: center; }
+.ex-grid--single .ex-item { max-width: 620px; text-align: center; }
+.ex-item {
+  flex: 1 1 0;
+  max-width: 420px;
+  padding: 20px 22px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  display: flex;
+  flex-direction: column;
+}
+.ex-name {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.ex-desc {
+  font-size: 15px;
+  line-height: 1.45;
+  opacity: 0.9;
+  flex: 1;
+}
+.ex-item .exercise-path { align-self: flex-start; font-size: 14px; }
+.ex-grid--single .ex-item .exercise-path { align-self: center; }
+
+/* DmColumns defaults to equal-width columns (flex: 1 1 0); these classes give a 2:1 ratio
+   for slides that need an uneven split, e.g. bullets next to a narrower code sample. */
+.col-w2 { flex: 2 1 0 !important; }
+.col-w1 { flex: 1 1 0 !important; }
+
+/* Shrinks headers, code blocks and bullets so a full side-by-side code comparison fits
+   on one slide (docker exec vs. docker run --entrypoint, single- vs. multi-stage builds). */
+.code-compare .dm-col-head { font-size: 13px !important; padding: 5px 10px !important; margin-bottom: 8px !important; }
+.code-compare .dm-col-body { font-size: 12px !important; }
+.code-compare pre.shiki { padding: 8px 12px !important; font-size: 11px !important; line-height: 1.3 !important; margin: 0 !important; }
+
+/* Image layer stack: Dockerfile order, FROM at the top. */
+.layer-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 210px;
+}
+.layer-stack--alpine {
+  width: 280px;
+}
+.layer-stack--alpine .layer {
+  font-size: 12px;
+  padding: 6px 10px;
+}
+.layer {
+  border-radius: 6px;
+  padding: 7px 12px;
+  background: var(--dm-surface);
+  border: 1px solid rgba(84, 62, 220, 0.3);
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  transition: background 200ms, border-color 200ms;
+}
+.layer-hash { font-size: 11px; opacity: 0.55; }
+/* A layer that has to be rebuilt because something below it changed. */
+.layer--dirty {
+  background: rgba(252, 107, 81, 0.16);
+  border-color: var(--dm-magenta, #fc6b51);
+}
+/* The layer whose input actually changed. */
+.layer--changed {
+  background: var(--dm-connecting, #543edc);
+  border-color: var(--dm-connecting, #543edc);
+  color: #fff;
+}
+.layer--changed .layer-hash { opacity: 0.8; }
+/* Layers still served from cache. */
+.layer--cached { opacity: 0.55; }
+.layer--merged {
+  background: rgba(30, 140, 70, 0.14);
+  border-color: #1a7a3a;
+}
+.layer-ask {
+  margin: 18px 0 0;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--dm-connecting);
+}
+
+/* Original slide 59, Dockerfile order: FROM on top, rebuild arrow down to CMD. */
+.layer-cake {
+  display: grid;
+  grid-template-columns: 150px 200px 1fr;
+  grid-template-rows: repeat(5, 56px);
+  column-gap: 10px;
+  row-gap: 10px;
+  align-items: center;
+  margin-top: 12px;
+}
+.layer-iso {
+  grid-column: 2;
+  height: 40px;
+  border-radius: 6px;
+  background: var(--dm-connecting);
+  color: #fff;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+.layer-iso--focus {
+  background: #fc6b51;
+}
+.layer-cake-def {
+  grid-column: 3;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.3;
+}
+.layer-cake-def b { color: var(--dm-connecting); }
+.layer-cake-change,
+.layer-cake-rebuild-tip {
+  grid-column: 1;
+  justify-self: stretch;
+  background: #fc6b51;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 28px;
+  padding: 0 16px 0 8px;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+}
+.layer-cake-change { grid-row: 3; }
+.layer-cake-rebuild-tip { grid-row: 5; }
+.layer-cake-rebuild {
+  grid-column: 1;
+  grid-row: 3 / 6;
+  justify-self: start;
+  align-self: stretch;
+  width: 2px;
+  margin-left: 6px;
+  background: repeating-linear-gradient(
+    to bottom,
+    #fc6b51 0 5px,
+    transparent 5px 9px
+  );
+  pointer-events: none;
+}
+.layer-note {
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* The host/container runtime diagram behind -p, -v and -e. */
+.host-box {
+  border: 1px dashed rgba(8, 6, 53, 0.4);
+  border-radius: 10px;
+  padding: 14px 16px 16px;
+  background: rgba(84, 62, 220, 0.04);
+}
+.host-label, .container-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 8px;
+}
+.container-box {
+  border: 1px solid var(--dm-connecting, #543edc);
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: #fff;
+}
+.port-pill, .mount-pill, .env-pill {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 13px;
+  background: var(--dm-surface);
+  border: 1px solid rgba(84, 62, 220, 0.3);
+}
+.port-pill { background: rgba(84, 62, 220, 0.12); }
+.mount-pill { background: rgba(252, 107, 81, 0.14); }
+.env-pill { background: rgba(8, 6, 53, 0.08); }
+
+/* Cheatsheet slides: a dense two-column command reference. */
+.cheat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 22px;
+  margin-top: 10px;
+}
+.cheat-item { font-size: 12.5px; line-height: 1.35; }
+.cheat-item b { color: var(--dm-connecting); font-weight: 700; }
+.cheat-item code {
+  display: block;
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* Orchestration ladder: compose / swarm / kubernetes, growing in feature richness. */
+.ladder { display: flex; align-items: flex-end; gap: 18px; margin-top: 18px; }
+.ladder-step {
+  flex: 1 1 0;
+  border-radius: 10px 10px 0 0;
+  padding: 14px 16px;
+  background: var(--dm-surface);
+  border: 1px solid rgba(84, 62, 220, 0.3);
+  border-bottom: none;
+}
+.ladder-step h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+.ladder-step p { font-size: 13px; line-height: 1.4; opacity: 0.85; }
+.ladder-step--1 { height: 130px; }
+.ladder-step--2 { height: 170px; }
+.ladder-step--3 { height: 210px; background: rgba(84, 62, 220, 0.12); }
+.ladder-axis { font-size: 12px; opacity: 0.7; margin-top: 8px; text-align: right; }
+
+/* Long YAML samples (compose file, GitHub Actions workflow) run past the 552px slide height at
+   the default code size; these shrink them to fit in one page of the PDF export. */
+.tight-code pre.shiki {
+  font-size: 11px !important;
+  line-height: 1.35 !important;
+  padding: 10px 14px !important;
+}
+
+/* The -p / -v / -e slides put a full `docker run` line in a half-width column; at the default
+   size it is clipped, so the code in those columns is a size smaller. */
+.run-flags pre.shiki {
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+  padding: 8px 12px !important;
+}
+
+/* Intro sequence: "works on my machine" memes, then the shipping-container analogy. */
+.meme-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  height: 360px;
+}
+.meme-hero img {
+  max-height: 340px;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.meme-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+  margin-top: 8px;
+}
+.meme-pair figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.meme-pair img {
+  max-height: 300px;
+  width: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.meme-pair figcaption {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--dm-premium);
+  text-align: center;
+}
+
+/* Dockerfile → image → container lifecycle, with the CLI on the arrows. */
+.docker-flow {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin-top: 18px;
+}
+.docker-flow-node {
+  flex: 1 1 0;
+  background: var(--dm-surface);
+  border-radius: 12px;
+  padding: 16px 12px 14px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.docker-flow-node img {
+  height: 72px;
+  width: auto;
+}
+.docker-flow-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--dm-premium);
+}
+.docker-flow-sub {
+  font-size: 13px;
+  line-height: 1.35;
+  opacity: 0.8;
+}
+.docker-flow-edge {
+  flex: 0 0 156px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.docker-flow-edge code {
+  display: block;
+  font-family: ui-monospace, 'DM Mono', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  background: var(--dm-authentic);
+  color: var(--dm-connecting);
+  padding: 6px 8px;
+  border-radius: 6px;
+  text-align: center;
+}
+.docker-flow-arrow {
+  width: 32px;
+  height: 32px;
+  color: var(--dm-connecting);
+}
+
+.docker-metaphor {
+  margin: 22px 0 0;
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+}
+.docker-metaphor b {
+  color: var(--dm-premium);
+}
+.docker-metaphor-arrow {
+  display: inline-block;
+  margin: 0 12px;
+  color: var(--dm-connecting);
+  font-weight: 700;
+}
+.docker-metaphor-note {
+  margin: 6px 0 0;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.registry-logos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px 10px;
+}
+.registry-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dm-premium);
+}
+.registry-logo-pair {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.registry-logo-icon {
+  width: 36px;
+  height: 36px;
+}
+.registry-logo--aws { color: #FF9900; }
+.registry-logo--azure { color: #0078D4; }
+.registry-logo--gcp { color: #4285F4; }
+.registry-logo--github { color: #181717; }
+.registry-logo--gitlab { color: #FC6D26; }
+.registry-logo--docker { color: #2496ED; }
+.registry-logo--self { color: var(--dm-premium); }
+
+.complex-df-code pre.shiki {
+  font-size: 9.5px !important;
+  line-height: 1.28 !important;
+  padding: 8px 10px !important;
+  max-height: 248px;
+  overflow: hidden;
+}
+
+/* Users / frontend / backend / database: the original two-slide architecture. */
+.app-arch-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 430px;
+}
+.app-arch-wrap--compact {
+  min-height: 0;
+  margin-top: 4px;
+}
+.app-arch {
+  display: grid;
+  grid-template-columns: 150px 36px 1fr;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 4px;
+  width: 100%;
+}
+.app-arch--lg {
+  grid-template-columns: 170px 48px 1fr;
+}
+.app-arch-users {
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+.app-arch-users img { height: 96px; width: auto; }
+.app-arch--lg .app-arch-users img { height: 118px; }
+.app-arch-users p {
+  margin: 0;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--dm-connecting);
+  line-height: 1.25;
+}
+.app-arch-brace {
+  grid-row: 1 / 3;
+  font-size: 150px;
+  line-height: 0.75;
+  font-weight: 200;
+  color: var(--dm-connecting);
+  text-align: center;
+}
+.app-arch--lg .app-arch-brace { font-size: 190px; }
+.app-arch-stack {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 22px;
+}
+.app-arch--lg .app-arch-stack { gap: 36px; }
+.app-arch-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.app-arch-svc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 118px;
+}
+.app-arch-svc p {
+  margin: 0;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--dm-premium);
+}
+.app-arch-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 28px;
+}
+.app-arch-logos img { height: 26px; width: auto; }
+.app-arch-icon { height: 70px; width: auto; }
+.app-arch--lg .app-arch-icon { height: 92px; }
+.app-arch-dbl {
+  flex: 0 0 54px;
+  height: 2px;
+  background: var(--dm-premium);
+  position: relative;
+}
+.app-arch-dbl::before,
+.app-arch-dbl::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-left: 2px solid var(--dm-premium);
+  border-bottom: 2px solid var(--dm-premium);
+}
+.app-arch-dbl::before { left: 0; transform: translateY(-50%) rotate(45deg); }
+.app-arch-dbl::after { right: 0; transform: translateY(-50%) rotate(-135deg); }
+
+.one-svc-reasons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 6px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.one-svc-reasons img {
+  height: 42px;
+  width: auto;
+  margin: 0 auto 6px;
+  display: block;
+}
+.one-svc-reasons p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dm-connecting);
+  line-height: 1.25;
+}
+
+/* Original "Dockerfile example": long ubuntu recipe + the slim comparison. */
+.df-example-code pre.shiki {
+  font-size: 10px !important;
+  line-height: 1.28 !important;
+  padding: 8px 10px !important;
+  margin: 0 !important;
+}
+.df-example-defs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+.df-example-defs p { margin: 0; font-size: 14px; line-height: 1.4; }
+.df-example-defs b { color: var(--dm-connecting); }
+.df-tree {
+  background: var(--dm-surface);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: ui-monospace, 'DM Mono', monospace;
+  font-size: 13px;
+}
+.df-tree-root {
+  font-weight: 700;
+  color: var(--dm-premium);
+  margin-bottom: 6px;
+}
+.df-tree-file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0 2px 14px;
+}
+.df-tree-file .i-mdi-docker { color: #2496ED; width: 16px; height: 16px; }
+.df-tree-file .i-mdi-language-python { color: #3776AB; width: 16px; height: 16px; }
+.df-tree-file .i-mdi-file-document-outline { color: var(--dm-connecting); width: 16px; height: 16px; }
+.df-size {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: ui-monospace, 'DM Mono', monospace;
+}
+.df-size--big { background: rgba(200, 40, 40, 0.12); color: #a31d1d; }
+.df-size--small { background: rgba(30, 140, 70, 0.14); color: #1a7a3a; }
+.df-compare-table { margin-top: 0 !important; margin-bottom: 10px; }
+.df-full-code pre.shiki {
+  font-size: 13px !important;
+  line-height: 1.38 !important;
+  padding: 12px 16px !important;
+  margin: 0 !important;
+}
+.df-size-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.df-size-row .df-size { font-size: 16px; padding: 4px 12px; }
+.df-size-arrow { color: var(--dm-connecting); font-weight: 700; font-size: 20px; }
+
+/* Original slide 82: three docker run blocks mapped onto one compose file. */
+.compose-map .dm-col-head { font-size: 13px !important; padding: 5px 10px !important; margin-bottom: 6px !important; }
+.compose-map pre.shiki {
+  font-size: 9.5px !important;
+  line-height: 1.28 !important;
+  padding: 6px 8px !important;
+  margin: 0 0 6px !important;
+}
+
+/* Original DevOps slides: company → build/test/release → customers, plus the infinity loop. */
+.cicd-flow {
+  display: grid;
+  grid-template-columns: 72px 1fr 1fr 1fr 72px;
+  grid-template-rows: auto auto auto;
+  column-gap: 8px;
+  row-gap: 4px;
+  align-items: center;
+  margin-top: 4px;
+}
+.cicd-org {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dm-premium);
+}
+.cicd-org img { height: 52px; width: auto; display: block; margin: 0 auto 4px; }
+.cicd-org--company { grid-column: 1; grid-row: 2; }
+.cicd-org--customers { grid-column: 5; grid-row: 2; }
+.cicd-step {
+  height: 40px;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-row: 2;
+}
+.cicd-step--build { grid-column: 2; background: #8b9cff; }
+.cicd-step--test { grid-column: 3; background: #543edc; }
+.cicd-step--release { grid-column: 4; background: #2a1f7a; }
+.cicd-step--plan { grid-column: 2; grid-row: 3; background: #c5cbe8; color: var(--dm-premium); }
+.cicd-step--monitor { grid-column: 4; grid-row: 3; background: #c5cbe8; color: var(--dm-premium); }
+.cicd-bracket {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dm-connecting);
+  border-bottom: 2px dashed var(--dm-connecting);
+  padding-bottom: 4px;
+}
+.cicd-bracket--ci { grid-column: 2 / 4; grid-row: 1; }
+.cicd-bracket--cd { grid-column: 4; grid-row: 1; }
+.cicd-bracket--mon { grid-column: 4; grid-row: 3; align-self: end; border-bottom: 0; border-top: 2px dashed rgba(8, 6, 53, 0.35); color: rgba(8, 6, 53, 0.45); padding-top: 4px; padding-bottom: 0; font-weight: 600; }
+.cicd-dim { opacity: 0.28; }
+.cicd-infinity {
+  display: block;
+  width: 560px;
+  max-width: 100%;
+  height: auto;
+  margin: 16px auto 0;
+}
+.gha-logo {
+  height: 36px;
+  width: auto;
+  display: block;
+  margin-bottom: 10px;
+}
+.gha-shot {
+  display: block;
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid rgba(8, 6, 53, 0.12);
+}
+.gha-code pre.shiki {
+  font-size: 10px !important;
+  line-height: 1.28 !important;
+  padding: 8px 10px !important;
+  margin: 0 !important;
+}
