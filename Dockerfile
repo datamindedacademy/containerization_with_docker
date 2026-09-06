@@ -1,8 +1,8 @@
-FROM mcr.microsoft.com/vscode/devcontainers/base:bullseye 
+FROM mcr.microsoft.com/vscode/devcontainers/base:bookworm
 
-# This env var is used to force the 
+# This env var is used to force the
 # rebuild of the Codespaces environment when needed
-ENV TRIGGER_REBUILD 1
+ENV TRIGGER_REBUILD=2
 
 USER root
 
