@@ -215,3 +215,163 @@
   line-height: 1.4 !important;
   padding: 8px 12px !important;
 }
+
+/* Intro sequence: "works on my machine" memes, then the shipping-container analogy. */
+.meme-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  height: 360px;
+}
+.meme-hero img {
+  max-height: 340px;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.meme-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+  margin-top: 8px;
+}
+.meme-pair figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.meme-pair img {
+  max-height: 300px;
+  width: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.meme-pair figcaption {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--dm-premium);
+  text-align: center;
+}
+
+/* Dockerfile → image → container lifecycle, with the CLI on the arrows. */
+.docker-flow {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin-top: 18px;
+}
+.docker-flow-node {
+  flex: 1 1 0;
+  background: var(--dm-surface);
+  border-radius: 12px;
+  padding: 16px 12px 14px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.docker-flow-node img {
+  height: 72px;
+  width: auto;
+}
+.docker-flow-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--dm-premium);
+}
+.docker-flow-sub {
+  font-size: 13px;
+  line-height: 1.35;
+  opacity: 0.8;
+}
+.docker-flow-edge {
+  flex: 0 0 156px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.docker-flow-edge code {
+  display: block;
+  font-family: ui-monospace, 'DM Mono', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  background: var(--dm-authentic);
+  color: var(--dm-connecting);
+  padding: 6px 8px;
+  border-radius: 6px;
+  text-align: center;
+}
+.docker-flow-arrow {
+  width: 32px;
+  height: 32px;
+  color: var(--dm-connecting);
+}
+
+.docker-metaphor {
+  margin: 22px 0 0;
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+}
+.docker-metaphor b {
+  color: var(--dm-premium);
+}
+.docker-metaphor-arrow {
+  display: inline-block;
+  margin: 0 12px;
+  color: var(--dm-connecting);
+  font-weight: 700;
+}
+.docker-metaphor-note {
+  margin: 6px 0 0;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.registry-logos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px 10px;
+}
+.registry-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dm-premium);
+}
+.registry-logo-pair {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.registry-logo-icon {
+  width: 36px;
+  height: 36px;
+}
+.registry-logo--aws { color: #FF9900; }
+.registry-logo--azure { color: #0078D4; }
+.registry-logo--gcp { color: #4285F4; }
+.registry-logo--github { color: #181717; }
+.registry-logo--gitlab { color: #FC6D26; }
+.registry-logo--docker { color: #2496ED; }
+.registry-logo--self { color: var(--dm-premium); }
+
+.complex-df-code pre.shiki {
+  font-size: 9.5px !important;
+  line-height: 1.28 !important;
+  padding: 8px 10px !important;
+  max-height: 248px;
+  overflow: hidden;
+}

@@ -15,6 +15,38 @@ subtitle: Using containers to package & deploy applications · Data Minded Acade
 <p class="mt-6 text-lg opacity-80"><code>github.com/datamindedacademy/containerization_with_docker</code></p>
 
 ---
+layout: section
+---
+
+# Let's get to know <span class="dm-accent">each other</span>
+
+---
+layout: intro
+role: Data Engineer, Data Minded
+---
+
+# Moenes Ben Soussia
+
+<p class="mt-6 text-lg opacity-80 leading-relaxed">
+Started in <strong>software engineering</strong>.<br>
+Now a <strong>data engineer</strong>.<br>
+Docker is in the toolbox most days.
+</p>
+
+
+---
+layout: values
+---
+
+# Now you, 30 <span class="dm-accent">seconds</span>
+
+<template #badges>
+<DmIconBadge icon="i-mdi-account-outline" label="Name" sub="Who are you?" />
+<DmIconBadge icon="i-mdi-briefcase-outline" label="Background" sub="Role" tone="dark" />
+<DmIconBadge icon="i-mdi-docker" label="Docker" sub="Never / some / daily" />
+</template>
+
+---
 layout: agenda
 label: Contents
 ---
@@ -41,6 +73,127 @@ layout: section
 ---
 
 # What are <span class="dm-accent">containers</span>?
+
+---
+layout: default
+label: 1 · Containers
+---
+
+# It works on <span class="dm-accent">my machine</span>
+
+<div class="meme-hero">
+<img src="/intro/works-locally.gif" alt="When your code works like God's plan" />
+</div>
+
+<!--
+You r dev locally, your application/script is doing all the magic that its supposed to do.
+-->
+
+---
+layout: default
+label: 1 · Containers
+---
+
+# All good, <span class="dm-accent">now ship it</span>🚀!
+
+<div class="meme-hero">
+<img src="/intro/other-machine.gif" alt="Ship it" />
+</div>
+
+<!--
+You are your confidence peak. Lets ship to production. Nothing should break right?
+-->
+
+---
+layout: default
+label: 1 · Containers
+---
+
+# Famous last <span class="dm-accent">words</span>
+
+<div class="meme-hero">
+<img src="/intro/works-on-my-machine.gif" alt="Walking away from an explosion" />
+</div>
+
+<!--
+You get thouands of emails and messages from users.
+-->
+
+---
+layout: default
+label: 1 · Containers
+---
+
+# Lost in all the <span class="dm-accent">logs</span>?
+
+<div class="meme-hero">
+<img src="/intro/error-cloud.png" alt="Word cloud of environment errors" />
+</div>
+
+<!--
+ModuleNotFoundError, JAVA_HOME, PYTHONPATH, wrong numpy. None of these are the app. They are
+the machine the app landed on. That is the whole problem.
+-->
+
+---
+layout: default
+label: 1 · Containers
+---
+
+# What physical containers are actually <span class="dm-accent">shipping</span>?!
+
+<div class="meme-hero">
+<img src="/intro/shipping-photo.jpg" alt="Stacks of shipping containers in a port" />
+</div>
+
+<!--
+Step back, when you think about shipping containers, you think about physical containers. But what are they actually shipping?
+-->
+
+---
+layout: default
+label: 1 · Containers
+---
+
+# Same box, anywhere it <span class="dm-accent">lands</span>
+
+<div class="meme-hero">
+<img src="/intro/shipping-boxes.png" alt="A cargo ship carrying standardised shipping containers" />
+</div>
+
+<!--
+
+-->
+
+---
+layout: default
+label: 1 · Containers
+---
+
+# One box, one <span class="dm-accent">cargo</span>
+
+<div class="meme-hero">
+<img src="/intro/shipping-cargo.png" alt="Shipping containers holding different cargo in isolation" />
+</div>
+
+<!--
+YOu dont ship parts of a piano, a car or a laptop. You ship the whole thing. The whole ready to use product.
+-->
+
+---
+layout: default
+label: 1 · Containers
+---
+
+# Same idea. For <span class="dm-accent">software</span>.
+
+<div class="meme-hero">
+<img src="/intro/docker-whale.png" alt="Docker whale carrying application stacks to any environment" />
+</div>
+
+<!--
+Thats the idea. You ship the whole application, but just parts of it, including all dependencies.
+-->
 
 ---
 layout: default
@@ -74,75 +227,6 @@ other environment, production server included.
 </DmColumn>
 </DmColumns>
 
-<!--
-The point to land: a container is not a machine, it is a package. "Works on my machine" stops being
-an argument once the machine travels with the code.
--->
-
----
-layout: default
-label: 1 · Containers
----
-
-# Containers vs. <span class="dm-accent">virtual machines</span>
-
-<DmColumns class="mt-4">
-<DmColumn header="Virtual machine" tone="navy">
-
-- Ships a **full guest OS** per application
-- A hypervisor virtualizes the hardware
-- Boots in minutes, weighs gigabytes
-- Strong isolation, high overhead
-
-</DmColumn>
-<DmColumn header="Container" tone="violet" divider>
-
-- **Shares the host kernel**, ships only user space
-- The container runtime isolates processes
-- Starts in milliseconds, weighs megabytes
-- Isolation by namespaces & cgroups, low overhead
-
-</DmColumn>
-</DmColumns>
-
-<DmBanner tone="authentic" icon="i-mdi-information-outline" title="A container is a process, not a machine" class="mt-6">
-It is a normal Linux process on the host, fenced off by kernel features. That is why it starts fast
-and why it cannot run a different kernel than the host's.
-</DmBanner>
-
-<!--
-Source of the classic side-by-side drawing: https://www.docker.com/resources/what-container/
--->
-
----
-layout: default
-label: 1 · Containers
----
-
-# Dockerfile, image, <span class="dm-accent">container</span>
-
-<p class="mt-2 text-lg">Docker is a tool for creating and running containers.</p>
-
-<DmSteps dir="horizontal" class="mt-8">
-<DmStep :n="1" label="Dockerfile">
-
-A **text file** specifying how the container for your application should look: OS, packages,
-required files, the command to run.
-
-</DmStep>
-<DmStep :n="2" label="Image">
-
-An **immutable prototype** of a container for your application. Built once, then shared.
-
-</DmStep>
-<DmStep :n="3" label="Container">
-
-A **running version** of your application/image. Many containers from one image.
-
-</DmStep>
-</DmSteps>
-
-<p class="mt-8 text-center text-lg">Recipe → cake mix → cake. The three words come back on every slide from here.</p>
 
 ---
 layout: values
@@ -160,6 +244,51 @@ layout: values
 Reproducibility is the one data engineers feel most: the same image runs on the laptop, in CI, and
 on the cluster, so a failure is a real failure and not an environment difference.
 -->
+
+---
+layout: default
+label: 1 · Containers
+---
+
+# Dockerfile, image, <span class="dm-accent">container</span>
+
+<p class="mt-1 text-lg">Docker is a tool for creating and running containers.</p>
+
+<div class="docker-flow">
+  <div class="docker-flow-node">
+    <img src="/intro/icon-dockerfile.svg?v=2" alt="Dockerfile" />
+    <div class="docker-flow-title">Dockerfile</div>
+    <div class="docker-flow-sub">A text file: OS, packages, files, the command to run.</div>
+  </div>
+  <div class="docker-flow-edge">
+    <code>docker build<br>-t my-app .</code>
+    <div class="i-mdi-arrow-right-bold docker-flow-arrow" />
+  </div>
+  <div class="docker-flow-node">
+    <img src="/intro/icon-image.svg?v=2" alt="Docker image" />
+    <div class="docker-flow-title">Image</div>
+    <div class="docker-flow-sub">An immutable prototype. Built once, then shared.</div>
+  </div>
+  <div class="docker-flow-edge">
+    <code>docker run my-app</code>
+    <div class="i-mdi-arrow-right-bold docker-flow-arrow" />
+  </div>
+  <div class="docker-flow-node">
+    <img src="/intro/icon-container.svg" alt="Docker container" />
+    <div class="docker-flow-title">Container</div>
+    <div class="docker-flow-sub">A running version of the image. Many from one.</div>
+  </div>
+</div>
+
+<p class="docker-metaphor">
+  <b>Recipe</b>
+  <span class="docker-metaphor-arrow">→</span>
+  <b>cake mix</b>
+  <span class="docker-metaphor-arrow">→</span>
+  <b>cake</b>
+</p>
+<p class="docker-metaphor-note">Those three words come back on every slide from here.</p>
+
 
 ---
 layout: section
@@ -193,11 +322,17 @@ docker container <subcommand> <param>
 </DmColumn>
 </DmColumns>
 
-<DmBanner tone="authentic" icon="i-mdi-console" title="In practice the main command is almost always omitted" class="mt-6">
-<code>docker build</code> is <code>docker image build</code>, <code>docker run</code> is
-<code>docker container run</code>, <code>docker ps</code> is <code>docker container ls</code>.
-Both forms are correct; the short one is what you will read in every tutorial.
+<DmBanner tone="authentic" icon="i-mdi-console" title="In practice the main command are omitted" class="mt-6">
+
+- <code>docker build</code> is <code>docker image build</code>
+- <code>docker run</code> is <code>docker container run</code>
+- <code>docker ps</code> is <code>docker container ls</code>
 </DmBanner>
+
+<!--
+You have other cli options, but for this course will just use Docker.
+Podman, containerd, kaniko...
+-->
 
 ---
 layout: default
@@ -209,12 +344,13 @@ label: 2 · The Docker CLI
 ```bash {all|1-2|4-5|7-8|all}
 # Run a container based on a given image
 docker container run <options> <image>:<tag> <CMD overwriting>
+# Short version
+docker run <options> <image>:<tag>
 
 # List the containers currently running (-a: also the stopped ones)
 docker container ls -a
-
-# The short forms you will actually type
-docker run <options> <image>:<tag>   |   docker ps -a
+# Short version
+docker ps -a
 ```
 
 <DmColumns class="mt-6" :gap="16">
@@ -232,8 +368,6 @@ docker run <options> <image>:<tag>   |   docker ps -a
 </DmColumn>
 </DmColumns>
 
-<p class="mt-4 text-sm opacity-70">Without <code>--name</code>, Docker invents one (<code>nostalgic_curie</code>). Name your containers: you will be typing that name a lot.</p>
-
 ---
 layout: statement
 ---
@@ -249,68 +383,8 @@ layout: statement
 </div>
 
 ---
-layout: section
----
-
-# Dev <span class="dm-accent">containers</span>
-
----
 layout: default
-label: 3 · Dev containers
----
-
-# Two ways to reach a <span class="dm-accent">container</span>
-
-<p class="mt-2 text-sm opacity-70 uppercase tracking-wide">Local flow</p>
-
-<DmProcess class="mt-2">
-<DmPhase label="Develop locally" />
-<DmPhase label="Containerize" />
-<DmPhase label="Test containerized" />
-</DmProcess>
-
-<p class="mt-8 text-sm opacity-70 uppercase tracking-wide">Dev container flow</p>
-
-<DmProcess class="mt-2">
-<DmPhase label="Write deployment container" />
-<DmPhase label="Develop in a production-like env" />
-</DmProcess>
-
-<p class="mt-6">In the second flow the container comes first, so "works containerized" is never a separate step you can forget.</p>
-
----
-layout: default
-label: 3 · Dev containers
----
-
-# Benefits of dev <span class="dm-accent">containers</span>
-
-<DmImpact class="mt-6">
-<DmImpactRow icon="i-mdi-account-group-outline" label="One environment">
-
-Everyone in the team develops in the same environment: no time spent writing code to overcome
-differences between operating systems.
-
-</DmImpactRow>
-<DmImpactRow icon="i-mdi-clock-fast" label="Faster startup">
-
-New developers don't have to install all software locally first, and there are fewer IT tickets
-asking for software permissions.
-
-</DmImpactRow>
-<DmImpactRow icon="i-mdi-key-outline" label="Realistic permissions">
-
-You can emulate the project's permissions during development, using project credentials instead of
-user credentials.
-
-</DmImpactRow>
-</DmImpact>
-
-<p class="mt-4 text-sm opacity-70">This repository ships a <code>.devcontainer/</code>, which is what GitHub Codespaces starts for you.</p>
-
----
-layout: default
-label: 3 · Dev containers
+label: 2 · The Docker CLI
 ---
 
 # Managing existing <span class="dm-accent">containers</span>
@@ -330,13 +404,12 @@ docker container exec <container name or id> <command>
 ```
 
 <DmBanner tone="violet" icon="i-mdi-bug-outline" title="docker exec is your debugger" class="mt-6">
-Extremely useful to debug a running Docker container: open a shell next to the process that is
-already running, and look at the filesystem, the environment and the logs from the inside.
+Extremely useful to debug a running Docker container: open a shell inside the running container, look at the filesystem, the environment and the logs from the inside.
 </DmBanner>
 
 ---
 layout: default
-label: 3 · Dev containers
+label: 2 · The Docker CLI
 ---
 
 # <span class="dm-accent">exec</span> vs. run --entrypoint
@@ -360,17 +433,15 @@ docker run --entrypoint=/bin/bash -it looper-cont
 ```
 
 - Modifies the entrypoint of a **new, to-be-deployed container**
-- The main purpose (`CMD`) is **NOT running in parallel**
+- The main purpose (`CMD`) is **NOT running**
 - Use it to poke at an image that crashes on start
 
 </DmColumn>
 </DmColumns>
 
-<p class="mt-6 text-center text-lg">Same shell prompt, two very different situations. Know which one you are in.</p>
-
 ---
 layout: default
-label: 3 · Dev containers
+label: 2 · The Docker CLI
 ---
 
 # Talking to your container: <span class="dm-accent">-p</span>
@@ -396,6 +467,7 @@ label: 3 · Dev containers
 ```bash
 docker run -p <host>:<container> my-image:latest
 docker run -p 1994:8080          my-image:latest
+docker run -p 8080:8080          my-image:latest
 ```
 
 Then open `http://localhost:1994/`.
@@ -405,15 +477,9 @@ Without `-p`, the container's port exists but nothing on your machine can reach 
 </DmColumn>
 </DmColumns>
 
-<!--
-The old deck wrote `--expose 1994:8080`. Careful: `--expose` only documents a port, it does not
-publish it. The flag that actually maps a port is `-p` / `--publish`; EXPOSE in a Dockerfile is
-documentation for humans and for `-P`.
--->
-
 ---
 layout: default
-label: 3 · Dev containers
+label: 2 · The Docker CLI
 ---
 
 # Sharing files with your container: <span class="dm-accent">-v</span>
@@ -443,15 +509,15 @@ docker run -v /path/to/my/config:/repo/config \
   my-image:latest
 ```
 
-- The container filesystem is **thrown away** when the container is removed
-- A mount is how data, config and code survive that
+- data inside the container is temporary and deleted when the container is removed.
+- Volumes are how data and files survive that.
 
 </DmColumn>
 </DmColumns>
 
 ---
 layout: default
-label: 3 · Dev containers
+label: 2 · The Docker CLI
 ---
 
 # Configuring your container: <span class="dm-accent">-e</span>
@@ -479,7 +545,6 @@ docker run -e <name>=<value> my-image:latest
 docker run -e ENV='PRO' my-image:latest
 ```
 
-- One image, many environments: dev, acc, pro
 - `--env-file .env` when there are more than a handful
 
 </DmColumn>
@@ -487,7 +552,7 @@ docker run -e ENV='PRO' my-image:latest
 
 ---
 layout: default
-label: 3 · Dev containers
+label: 2 · The Docker CLI
 ---
 
 # docker run, all <span class="dm-accent">together</span>
@@ -523,7 +588,7 @@ layout: statement
 </div>
 <div class="ex-item">
 <p class="ex-name">3 · interact</p>
-<p class="ex-desc">Get inside running containers: overwrite the entrypoint, <code>exec</code> into a container, bind-mount a folder</p>
+<p class="ex-desc">Get inside a running container: <code>exec</code> vs. overwriting the entrypoint</p>
 <p class="exercise-path"><code>content/exercise_3</code></p>
 </div>
 </div>
@@ -533,6 +598,51 @@ layout: section
 ---
 
 # Images & <span class="dm-accent">registries</span>
+
+
+---
+layout: default
+label: 4 · Images & registries
+---
+
+# Dockerfile, <span class="dm-accent">image</span>, container
+
+<p class="mt-1 text-lg">Docker is a tool for creating and running containers.</p>
+
+<div class="docker-flow">
+  <div class="docker-flow-node">
+    <img src="/intro/icon-dockerfile.svg?v=2" alt="Dockerfile" />
+    <div class="docker-flow-title">Dockerfile</div>
+    <div class="docker-flow-sub">A text file: OS, packages, files, the command to run.</div>
+  </div>
+  <div class="docker-flow-edge">
+    <code>docker build<br>-t my-app .</code>
+    <div class="i-mdi-arrow-right-bold docker-flow-arrow" />
+  </div>
+  <div class="docker-flow-node">
+    <img src="/intro/icon-image.svg?v=2" alt="Docker image" />
+    <div class="docker-flow-title">Image</div>
+    <div class="docker-flow-sub">An immutable prototype. Built once, then shared.</div>
+  </div>
+  <div class="docker-flow-edge">
+    <code>docker run my-app</code>
+    <div class="i-mdi-arrow-right-bold docker-flow-arrow" />
+  </div>
+  <div class="docker-flow-node">
+    <img src="/intro/icon-container.svg" alt="Docker container" />
+    <div class="docker-flow-title">Container</div>
+    <div class="docker-flow-sub">A running version of the image. Many from one.</div>
+  </div>
+</div>
+
+<p class="docker-metaphor">
+  <b>Recipe</b>
+  <span class="docker-metaphor-arrow">→</span>
+  <b>cake mix</b>
+  <span class="docker-metaphor-arrow">→</span>
+  <b>cake</b>
+</p>
+<p class="docker-metaphor-note">Those three words come back on every slide from here.</p>
 
 ---
 layout: default
@@ -546,7 +656,7 @@ label: 4 · Images & registries
 docker image ls                            # docker images
 
 # Build an image from a Dockerfile
-docker image build -t <image name> -f <Dockerfile name> .
+docker image build -t <image name> -f <Dockerfile name> <build context>
 
 # Rename / re-tag an existing image
 docker image tag <source>:<tag> <target>:<target tag>
@@ -554,9 +664,6 @@ docker image tag <source>:<tag> <target>:<target tag>
 # Delete an existing image
 docker image rm <image id / complete name>  # docker rmi
 ```
-
-<p class="mt-4 text-sm opacity-70">The trailing <code>.</code> in <code>build</code> is the <b>build context</b>: the folder Docker uploads to the daemon and the root of every <code>COPY</code>. It is not the Dockerfile location — that is <code>-f</code>.</p>
-
 ---
 layout: default
 label: 4 · Images & registries
@@ -571,24 +678,46 @@ label: 4 · Images & registries
 
 - Images are **pulled from** and **pushed to** image registries
 - Image versioning: images are **immutable objects**
-- Sharing and collaboration across teams and projects
 
 </DmColumn>
 <DmColumn tone="plain" divider>
 
-| Cloud-native | Git-platform & other |
-| --- | --- |
-| ECR (AWS) | GitHub Container Registry |
-| ACR (Azure) | GitLab Container Registry |
-| GAR (Google) | Docker Hub, self-hosted |
+<div class="registry-logos">
+  <div class="registry-logo">
+    <div class="i-mdi-aws registry-logo-icon registry-logo--aws" />
+    <span>ECR</span>
+  </div>
+  <div class="registry-logo">
+    <div class="i-mdi-microsoft-azure registry-logo-icon registry-logo--azure" />
+    <span>ACR</span>
+  </div>
+  <div class="registry-logo">
+    <div class="i-mdi-google-cloud registry-logo-icon registry-logo--gcp" />
+    <span>GAR</span>
+  </div>
+  <div class="registry-logo">
+    <div class="registry-logo-pair">
+      <div class="i-mdi-github registry-logo-icon registry-logo--github" />
+      <div class="i-mdi-gitlab registry-logo-icon registry-logo--gitlab" />
+    </div>
+    <span>GHCR / GitLab</span>
+  </div>
+  <div class="registry-logo">
+    <div class="i-mdi-docker registry-logo-icon registry-logo--docker" />
+    <span>Docker Hub</span>
+  </div>
+  <div class="registry-logo">
+    <div class="i-mdi-server registry-logo-icon registry-logo--self" />
+    <span>Self-hosted</span>
+  </div>
+</div>
 
 </DmColumn>
 </DmColumns>
 
-<DmBanner tone="authentic" icon="i-mdi-tag-outline" title="A tag is a label, not a version" class="mt-6">
-Tags can be moved: <code>latest</code> today is not <code>latest</code> tomorrow. The digest
-(<code>image@sha256:…</code>) is the only truly immutable reference.
-</DmBanner>
+<!--
+Sharing and collaboration across teams and projects
+-->
 
 ---
 layout: default
@@ -599,15 +728,13 @@ label: 4 · Images & registries
 
 ```bash {all|1-2|4-6|all}
 # Pull an image from an image registry
-docker image pull <image name>              # docker pull
+docker image pull <registry host>/<image name>:<tag>              # docker pull
 
 # Push a local image to a registry, to share it
 # The name must include the remote registry host
 docker image push <registry host>/<name>:<tag>   # docker push
 ```
 
-<DmColumns class="mt-6" :gap="16">
-<DmColumn tone="plain">
 
 ```bash
 docker tag my-app:latest \
@@ -615,21 +742,55 @@ docker tag my-app:latest \
 docker push ghcr.io/datamindedacademy/my-app:1.2.0
 ```
 
-</DmColumn>
-<DmColumn tone="plain" divider>
-
-- Log in first: `docker login ghcr.io`
-- The registry host is part of the **image name**, nothing else
-- No host in the name means Docker Hub
-
-</DmColumn>
-</DmColumns>
-
 ---
 layout: section
 ---
 
 # Writing <span class="dm-accent">Dockerfiles</span>
+
+---
+layout: default
+label: 4 · Images & registries
+---
+
+# <span class="dm-accent">Dockerfile</span>, image, container
+
+<p class="mt-1 text-lg">Docker is a tool for creating and running containers.</p>
+
+<div class="docker-flow">
+  <div class="docker-flow-node">
+    <img src="/intro/icon-dockerfile.svg?v=2" alt="Dockerfile" />
+    <div class="docker-flow-title">Dockerfile</div>
+    <div class="docker-flow-sub">A text file: OS, packages, files, the command to run.</div>
+  </div>
+  <div class="docker-flow-edge">
+    <code>docker build<br>-t my-app .</code>
+    <div class="i-mdi-arrow-right-bold docker-flow-arrow" />
+  </div>
+  <div class="docker-flow-node">
+    <img src="/intro/icon-image.svg?v=2" alt="Docker image" />
+    <div class="docker-flow-title">Image</div>
+    <div class="docker-flow-sub">An immutable prototype. Built once, then shared.</div>
+  </div>
+  <div class="docker-flow-edge">
+    <code>docker run my-app</code>
+    <div class="i-mdi-arrow-right-bold docker-flow-arrow" />
+  </div>
+  <div class="docker-flow-node">
+    <img src="/intro/icon-container.svg" alt="Docker container" />
+    <div class="docker-flow-title">Container</div>
+    <div class="docker-flow-sub">A running version of the image. Many from one.</div>
+  </div>
+</div>
+
+<p class="docker-metaphor">
+  <b>Recipe</b>
+  <span class="docker-metaphor-arrow">→</span>
+  <b>cake mix</b>
+  <span class="docker-metaphor-arrow">→</span>
+  <b>cake</b>
+</p>
+<p class="docker-metaphor-note">Those three words come back on every slide from here.</p>
 
 ---
 layout: default
@@ -652,9 +813,40 @@ CMD ["python", "main.py"]
 </DmColumn>
 <DmColumn header="…or very complex" tone="navy" divider>
 
-- Multi-stage builds, build args and secrets
-- Non-root users, healthchecks, cache mounts
-- Hundreds of lines in a real production repo
+<div class="complex-df-code">
+
+```dockerfile
+FROM python:3.12-slim AS builder
+ARG POETRY_VERSION=1.8.3
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PYTHONDONTWRITEBYTECODE=1
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential libpq-dev curl \
+    && pip install "poetry==${POETRY_VERSION}" \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+WORKDIR /src
+COPY pyproject.toml poetry.lock ./
+RUN poetry export -f requirements.txt --output /tmp/req.txt \
+    && pip install --prefix=/install -r /tmp/req.txt
+
+FROM python:3.12-slim
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libpq5 tini \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd --create-home --uid 10001 app
+COPY --from=builder /install /usr/local
+WORKDIR /app
+COPY src/ ./src/
+COPY alembic.ini ./
+USER app
+EXPOSE 8000
+HEALTHCHECK --interval=30s --timeout=3s \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"
+ENTRYPOINT ["tini", "--"]
+CMD ["gunicorn", "src.main:app", "--bind", "0.0.0.0:8000"]
+```
+
+</div>
 
 </DmColumn>
 </DmColumns>
@@ -682,7 +874,7 @@ label: 5 · Writing Dockerfiles
 <DmColumns class="mt-4" :gap="20">
 <DmColumn tone="plain" class="col-w1">
 
-```dockerfile {all|1|2|3|4|5|all}
+```dockerfile {1|2|3|4|5|all}
 FROM python:3.12-slim
 WORKDIR /app
 COPY . .
@@ -693,20 +885,18 @@ CMD ["python", "main.py"]
 </DmColumn>
 <DmColumn tone="plain" divider class="col-w1">
 
-<v-clicks>
-
-- **FROM** — specify a base image
-- **WORKDIR** — running `cd` in the Docker world
-- **COPY / ADD** — copy files inside the container
-- **RUN** — run a command while building the image
-- **CMD** — defines the command run when the container is run
-
-</v-clicks>
+<ul>
+<li><b>FROM</b> — specify a base image</li>
+<li v-click="1"><b>WORKDIR</b> — running <code>cd</code> in the Docker world</li>
+<li v-click="2"><b>COPY / ADD</b> — copy files inside the container</li>
+<li v-click="3"><b>RUN</b> — run a command while building the image</li>
+<li v-click="4"><b>CMD</b> — defines the command to run when the container is running</li>
+</ul>
 
 </DmColumn>
 </DmColumns>
 
-<p class="mt-6 text-sm opacity-70"><code>ADD</code> also unpacks archives and fetches URLs. Prefer <code>COPY</code>: it does exactly one thing.</p>
+<p class="mt-6 text-sm opacity-70"><code>ADD</code> does the same as COPY. It just works also for remote files. </p>
 
 ---
 layout: default
@@ -779,8 +969,9 @@ Requirements change rarely, so the expensive `RUN` layer stays cached across cod
 </DmColumn>
 </DmColumns>
 
-<p class="mt-4 text-center">Check the output of <code>docker build</code>: it prints <code>CACHED</code> in front of every reused layer.</p>
-
+<!--
+Check the output of docker build: it prints CACHED in front of every reused layer.
+-->
 ---
 layout: default
 label: 5 · Writing Dockerfiles
@@ -807,15 +998,19 @@ CMD ["main.py"]
 </DmColumn>
 <DmColumn tone="plain" divider class="col-w1">
 
-- **USER** — change the terminal to an existing user. Containers run as **root** by default; don't.
-- **EXPOSE** — declare which port is used by the container. Documentation, not a mapping: you still
-  need `-p` at run time.
-- **ENTRYPOINT** — defines the executable that will be in charge of running the command from `CMD`.
+- **USER** — change the terminal to an existing user.
+- **EXPOSE** — declare which port is used by the container.
+- **ENTRYPOINT** — defines the executable that runs the `CMD` command.
 
 </DmColumn>
 </DmColumns>
 
 <p class="mt-4 text-sm opacity-70"><code>ENTRYPOINT</code> is the program, <code>CMD</code> its default arguments. <code>docker run img foo.py</code> replaces the arguments, not the program.</p>
+
+<!--
+When using docker, the user is root by default, dont do that.
+Expose, mainly docs
+-->
 
 ---
 layout: default

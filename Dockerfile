@@ -2,12 +2,12 @@ FROM mcr.microsoft.com/vscode/devcontainers/base:bookworm
 
 # This env var is used to force the
 # rebuild of the Codespaces environment when needed
-ENV TRIGGER_REBUILD=2
+ENV TRIGGER_REBUILD=3
 
 USER root
 
 RUN apt-get update && \
-    apt-get install -y wget git tree ssh nano sudo nmap man tmux curl && \
+    apt-get install -y wget git tree ssh nano sudo nmap man tmux curl openjdk-17-jdk && \
     apt-get clean && \
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/* && \
