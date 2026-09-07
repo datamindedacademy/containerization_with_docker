@@ -55,13 +55,13 @@ label: Contents
 
 1. What are containers?
 2. The Docker CLI
-3. Dev containers
-4. Images & registries
-5. Writing Dockerfiles
-6. Custom builds
-7. Containerizing a web application
-8. Orchestration
-9. CI/CD & wrap-up
+3. Images & registries
+4. Writing Dockerfiles
+5. Custom builds
+6. Containerizing a web application
+7. Orchestration
+8. CI/CD
+9. Wrap-up
 
 <!--
 Three blocks, really: what containers are and why they help, the concepts you need to use Docker,
@@ -246,8 +246,15 @@ on the cluster, so a failure is a real failure and not an environment difference
 -->
 
 ---
+layout: section
+---
+
+# Get started with <span class="dm-accent">Docker</span>
+
+---
 layout: default
-label: 1 · Containers
+label: 2 · The Docker CLI
+clicks: 2
 ---
 
 # Dockerfile, image, <span class="dm-accent">container</span>
@@ -255,19 +262,20 @@ label: 1 · Containers
 <p class="mt-1 text-lg">Docker is a tool for creating and running containers.</p>
 
 <div class="docker-flow">
-  <div class="docker-flow-node">
+  <div class="docker-flow-node is-blur">
     <img src="/intro/icon-dockerfile.svg?v=2" alt="Dockerfile" />
     <div class="docker-flow-title">Dockerfile</div>
     <div class="docker-flow-sub">A text file: OS, packages, files, the command to run.</div>
   </div>
-  <div class="docker-flow-edge">
+  <div class="docker-flow-edge is-blur">
     <code>docker build<br>-t my-app .</code>
     <div class="i-mdi-arrow-right-bold docker-flow-arrow" />
   </div>
-  <div class="docker-flow-node">
+  <div class="docker-flow-node" :class="{ 'is-blur': $clicks < 2 }">
     <img src="/intro/icon-image.svg?v=2" alt="Docker image" />
     <div class="docker-flow-title">Image</div>
     <div class="docker-flow-sub">An immutable prototype. Built once, then shared.</div>
+    <div class="docker-flow-metaphor" :class="{ 'is-hidden': $clicks < 2 }">cake mix</div>
   </div>
   <div class="docker-flow-edge">
     <code>docker run my-app</code>
@@ -277,24 +285,14 @@ label: 1 · Containers
     <img src="/intro/icon-container.svg" alt="Docker container" />
     <div class="docker-flow-title">Container</div>
     <div class="docker-flow-sub">A running version of the image. Many from one.</div>
+    <div class="docker-flow-metaphor" :class="{ 'is-hidden': $clicks < 2 }">cake</div>
   </div>
 </div>
 
-<p class="docker-metaphor">
-  <b>Recipe</b>
-  <span class="docker-metaphor-arrow">→</span>
-  <b>cake mix</b>
-  <span class="docker-metaphor-arrow">→</span>
-  <b>cake</b>
-</p>
-<p class="docker-metaphor-note">Those three words come back on every slide from here.</p>
-
-
----
-layout: section
----
-
-# Get started with <span class="dm-accent">Docker</span>
+<!--
+What is docker???
+Animation: container in focus, Dockerfile stays blurred. Click 2 unblurs image and shows cake mix / cake.
+-->
 
 ---
 layout: default
@@ -610,7 +608,8 @@ layout: section
 
 ---
 layout: default
-label: 4 · Images & registries
+label: 3 · Images & registries
+clicks: 1
 ---
 
 # Dockerfile, <span class="dm-accent">image</span>, container
@@ -618,7 +617,7 @@ label: 4 · Images & registries
 <p class="mt-1 text-lg">Docker is a tool for creating and running containers.</p>
 
 <div class="docker-flow">
-  <div class="docker-flow-node">
+  <div class="docker-flow-node" :class="{ 'is-blur': $clicks < 1 }">
     <img src="/intro/icon-dockerfile.svg?v=2" alt="Dockerfile" />
     <div class="docker-flow-title">Dockerfile</div>
     <div class="docker-flow-sub">A text file: OS, packages, files, the command to run.</div>
@@ -643,18 +642,13 @@ label: 4 · Images & registries
   </div>
 </div>
 
-<p class="docker-metaphor">
-  <b>Recipe</b>
-  <span class="docker-metaphor-arrow">→</span>
-  <b>cake mix</b>
-  <span class="docker-metaphor-arrow">→</span>
-  <b>cake</b>
-</p>
-<p class="docker-metaphor-note">Those three words come back on every slide from here.</p>
+<!--
+Animation: only the Dockerfile is blurred → click to unblur the whole chain.
+-->
 
 ---
 layout: default
-label: 4 · Images & registries
+label: 3 · Images & registries
 ---
 
 # Working with local <span class="dm-accent">images</span>
@@ -679,7 +673,7 @@ Animation: all → ls → build → tag → rm → all.
 
 ---
 layout: default
-label: 4 · Images & registries
+label: 3 · Images & registries
 ---
 
 # Image <span class="dm-accent">registries</span>
@@ -734,7 +728,7 @@ Sharing and collaboration across teams and projects
 
 ---
 layout: default
-label: 4 · Images & registries
+label: 3 · Images & registries
 ---
 
 # Pulling and <span class="dm-accent">pushing</span>
@@ -767,7 +761,7 @@ layout: section
 
 ---
 layout: default
-label: 4 · Images & registries
+label: 4 · Writing Dockerfiles
 ---
 
 # <span class="dm-accent">Dockerfile</span>, image, container
@@ -800,18 +794,9 @@ label: 4 · Images & registries
   </div>
 </div>
 
-<p class="docker-metaphor">
-  <b>Recipe</b>
-  <span class="docker-metaphor-arrow">→</span>
-  <b>cake mix</b>
-  <span class="docker-metaphor-arrow">→</span>
-  <b>cake</b>
-</p>
-<p class="docker-metaphor-note">Those three words come back on every slide from here.</p>
-
 ---
 layout: default
-label: 5 · Writing Dockerfiles
+label: 4 · Writing Dockerfiles
 ---
 
 # A Dockerfile is a <span class="dm-accent">recipe</span>
@@ -883,7 +868,7 @@ A Dockerfile is **a file part of your repository**, reviewed like any other code
 
 ---
 layout: default
-label: 5 · Writing Dockerfiles
+label: 4 · Writing Dockerfiles
 ---
 
 # The five instructions you <span class="dm-accent">always</span> use
@@ -921,7 +906,7 @@ Animation: FROM → WORKDIR → COPY → RUN → CMD → all. ADD is the quiet e
 
 ---
 layout: default
-label: 5 · Writing Dockerfiles
+label: 4 · Writing Dockerfiles
 ---
 
 # Every instruction is a <span class="dm-accent">layer</span>
@@ -954,7 +939,7 @@ Read it like a Dockerfile: FROM on top. Change COPY, and every instruction below
 
 ---
 layout: default
-label: 5 · Writing Dockerfiles
+label: 4 · Writing Dockerfiles
 ---
 
 # What might be <span class="dm-accent">wrong</span>?
@@ -1026,7 +1011,7 @@ Two answers: COPY before the packages busts the cache, and four RUN layers where
 
 ---
 layout: default
-label: 5 · Writing Dockerfiles
+label: 4 · Writing Dockerfiles
 ---
 
 # Better usage of the <span class="dm-accent">cache</span>
@@ -1072,7 +1057,7 @@ layout: section
 
 ---
 layout: default
-label: 5 · Writing Dockerfiles
+label: 4 · Writing Dockerfiles
 ---
 
 # A first <span class="dm-accent">Dockerfile</span>
@@ -1110,7 +1095,7 @@ code change reinstalls the requirements.
 
 ---
 layout: default
-label: 5 · Writing Dockerfiles
+label: 4 · Writing Dockerfiles
 ---
 
 # A smaller image, a better <span class="dm-accent">cache</span>
@@ -1150,7 +1135,7 @@ project. That is the inverse of the previous slide, and about half the image.
 
 ---
 layout: default
-label: 5 · Writing Dockerfiles
+label: 4 · Writing Dockerfiles
 ---
 
 # Dockerfile <span class="dm-accent">instructions</span>: the full picture
@@ -1212,7 +1197,7 @@ layout: section
 
 ---
 layout: default
-label: 6 · Custom builds
+label: 5 · Custom builds
 ---
 
 # Build <span class="dm-accent">arguments</span>
@@ -1243,7 +1228,7 @@ docker build --build-arg="PYTHON_VERSION=3.11" .
 
 ---
 layout: default
-label: 6 · Custom builds
+label: 5 · Custom builds
 ---
 
 # Build <span class="dm-accent">secrets</span>
@@ -1277,7 +1262,7 @@ docker build \
 
 ---
 layout: default
-label: 6 · Custom builds
+label: 5 · Custom builds
 ---
 
 # Multi-stage <span class="dm-accent">images</span>
@@ -1328,7 +1313,7 @@ layout: section
 
 ---
 layout: default
-label: 7 · Web application
+label: 6 · Web application
 ---
 
 <div class="app-arch-wrap">
@@ -1376,7 +1361,7 @@ label: 7 · Web application
 
 ---
 layout: default
-label: 7 · Web application
+label: 6 · Web application
 ---
 
 # One service = one <span class="dm-accent">container</span>
@@ -1450,7 +1435,7 @@ Dockerfile. The next slide is what it looks like to run that by hand.
 
 ---
 layout: default
-label: 7 · Web application
+label: 6 · Web application
 ---
 
 # Three containers, by <span class="dm-accent">hand</span>
@@ -1481,7 +1466,7 @@ layout: quote
 
 ---
 layout: default
-label: 8 · Orchestration
+label: 7 · Orchestration
 ---
 
 # The orchestration <span class="dm-accent">ladder</span>
@@ -1507,7 +1492,7 @@ label: 8 · Orchestration
 
 ---
 layout: default
-label: 8 · Orchestration
+label: 7 · Orchestration
 ---
 
 # Three runs, one <span class="dm-accent">file</span>
@@ -1579,7 +1564,7 @@ name, not host.docker.internal. Point at that line.
 
 ---
 layout: default
-label: 8 · Orchestration
+label: 7 · Orchestration
 ---
 
 # docker-compose.yaml, <span class="dm-accent">step by step</span>
@@ -1623,7 +1608,7 @@ Compose can build an image from a Dockerfile as well as pull one.
 
 ---
 layout: default
-label: 8 · Orchestration
+label: 7 · Orchestration
 ---
 
 # Running the whole <span class="dm-accent">stack</span>
@@ -1655,7 +1640,7 @@ Use environment variables from the host system instead:
 
 ---
 layout: default
-label: 8 · Orchestration
+label: 7 · Orchestration
 ---
 
 # Compose while <span class="dm-accent">developing</span>
@@ -1707,7 +1692,7 @@ layout: section
 
 ---
 layout: default
-label: 9 · CI/CD
+label: 8 · CI/CD
 ---
 
 # The DevOps <span class="dm-accent">loop</span>
@@ -1734,7 +1719,7 @@ label: 9 · CI/CD
 
 ---
 layout: default
-label: 9 · CI/CD
+label: 8 · CI/CD
 ---
 
 # The DevOps <span class="dm-accent">loop</span>
@@ -1766,7 +1751,7 @@ course. Same image the developers used, same image the tests used.
 
 ---
 layout: default
-label: 9 · CI/CD
+label: 8 · CI/CD
 ---
 
 <img class="gha-logo" src="/intro/devops/actions-logo.png" alt="GitHub Actions" />
@@ -1779,7 +1764,7 @@ Walk the job: checkout, build the image, test that image, then login and push. T
 
 ---
 layout: default
-label: 9 · CI/CD
+label: 8 · CI/CD
 ---
 
 # Adapt when the job is <span class="dm-accent">run</span>
@@ -1861,7 +1846,7 @@ layout: section
 
 ---
 layout: default
-label: 10 · Wrap-up
+label: 9 · Wrap-up
 ---
 
 # What we <span class="dm-accent">learned</span>

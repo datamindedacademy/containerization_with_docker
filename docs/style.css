@@ -398,27 +398,20 @@
   height: 32px;
   color: var(--dm-connecting);
 }
-
-.docker-metaphor {
-  margin: 22px 0 0;
-  text-align: center;
-  font-size: 18px;
-  letter-spacing: 0.01em;
+.docker-flow-node.is-blur,
+.docker-flow-edge.is-blur {
+  filter: blur(3.5px);
+  opacity: 0.42;
+  user-select: none;
 }
-.docker-metaphor b {
-  color: var(--dm-premium);
-}
-.docker-metaphor-arrow {
-  display: inline-block;
-  margin: 0 12px;
-  color: var(--dm-connecting);
+.docker-flow-metaphor {
+  font-size: 15px;
   font-weight: 700;
+  color: var(--dm-connecting);
+  min-height: 1.2em;
 }
-.docker-metaphor-note {
-  margin: 6px 0 0;
-  text-align: center;
-  font-size: 14px;
-  opacity: 0.7;
+.docker-flow-metaphor.is-hidden {
+  opacity: 0;
 }
 
 .registry-logos {
