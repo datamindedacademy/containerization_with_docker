@@ -16,4 +16,3 @@ Any ideas about the answers?
 
 * What are those numbers next to the image names?
 * Why did `hello-world` stop by itself?
-* Two containers with the same image name?
